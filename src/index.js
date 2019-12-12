@@ -18,5 +18,9 @@
  */
 
 import deepCopy from "./deepCopy";
+import deepEquals from "./deepEquals";
 
-export { deepCopy };
+export {
+	deepCopy,
+	deepEquals
+};
