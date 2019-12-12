@@ -17,14 +17,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import deepCopy from "./deepCopy";
-import deepEquals from "./deepEquals";
-import deepFreeze from "./deepFreeze";
-import safeCopy from "./safeCopy";
-
-export {
-	deepCopy,
-	deepEquals,
-	deepFreeze,
-	safeCopy
-};
+/**
+ * Creates a safe copy of **obj** by creating a deep frozen copy of it.
+ *
+ * @param obj
+ *        The object to create a safe copy of.
+ *
+ * @returns A safe copy of **obj**.
+ */
+export default function safeCopy(obj) {
+	"use strict";
+	return deepFreeze(deepCopy(obj));
+}
