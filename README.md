@@ -9,6 +9,20 @@
 
 **DeepTools** is a set of utility functions that recursively operate on objects.
 
+## Download ##
+
+Using **npm**:
+
+```sh
+npm i @mfederczuk/deeptools
+```
+
+Using **Yarn**:
+
+```sh
+yarn add @mfederczuk/deeptools
+```
+
 ## Usage ##
 
 ### [`deepCopy`](./src/deepCopy.js) ###
