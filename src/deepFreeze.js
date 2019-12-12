@@ -28,7 +28,13 @@
 module.exports = function deepFreeze(obj) {
 	"use strict";
 
-	if(typeof(obj) !== "function") {
+	if(typeof(obj) !== "undefined" &&
+	   obj !== null &&
+	   typeof(obj) !== "boolean" &&
+	   typeof(obj) !== "number" &&
+	   typeof(obj) !== "string" &&
+	   typeof(obj) !== "function") {
+
 		for(const prop of Object.getOwnPropertyNames(obj)) {
 			deepFreeze(obj[prop]);
 		}
