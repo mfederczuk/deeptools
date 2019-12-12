@@ -5,8 +5,9 @@
 	"main": "src/index.js",
 	"types": "types/index.d.ts",
 	"scripts": {
-		"test": "npm run testDeepCopy",
-		"testDeepCopy": "node test/deepCopy.js"
+		"test": "npm run testDeepCopy && npm run testDeepEquals",
+		"testDeepCopy": "node test/deepCopy.js",
+		"testDeepEquals": "node test/deepEquals.js"
 	},
 	"repository": {
 		"type": "git",
