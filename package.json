@@ -8,7 +8,8 @@
 		"test": "npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
 		"testDeepCopy": "node test/deepCopy.js",
 		"testDeepEquals": "node test/deepEquals.js",
-		"testDeepFreeze": "node test/deepFreeze.js"
+		"testDeepFreeze": "node test/deepFreeze.js",
+		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze"
 	},
 	"repository": {
 		"type": "git",
