@@ -17,12 +17,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import deepCopy from "./deepCopy";
-import deepEquals from "./deepEquals";
-import deepFreeze from "./deepFreeze";
+/**
+ * Recursively freezes **obj** with all of its properties.
+ *
+ * @param obj
+ *        The object to freeze.
+ *
+ * @returns **obj**, deeply frozen.
+ */
+export default function deepFreeze(obj) {
+	"use strict";
 
-export {
-	deepCopy,
-	deepEquals,
-	deepFreeze
-};
+	if(typeof(obj) !== "function") {
+		for(const prop of Object.getOwnPropertyNames(obj)) {
+			deepFreeze(obj[prop]);
+		}
+	}
+
+	return Object.freeze(obj);
+}
