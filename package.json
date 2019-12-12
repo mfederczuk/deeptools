@@ -5,9 +5,10 @@
 	"main": "src/index.js",
 	"types": "types/index.d.ts",
 	"scripts": {
-		"test": "npm run testDeepCopy && npm run testDeepEquals",
+		"test": "npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
 		"testDeepCopy": "node test/deepCopy.js",
-		"testDeepEquals": "node test/deepEquals.js"
+		"testDeepEquals": "node test/deepEquals.js",
+		"testDeepFreeze": "node test/deepFreeze.js"
 	},
 	"repository": {
 		"type": "git",
