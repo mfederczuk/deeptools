@@ -25,7 +25,7 @@
  *
  * @returns **obj**, deeply frozen.
  */
-export default function deepFreeze(obj) {
+module.exports = function deepFreeze(obj) {
 	"use strict";
 
 	if(typeof(obj) !== "function") {

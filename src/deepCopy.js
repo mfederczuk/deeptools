@@ -25,7 +25,7 @@
  *
  * @returns A deep copy of **obj**.
  */
-export default function deepCopy(obj) {
+module.exports = function deepCopy(obj) {
 	"use strict";
 
 	if(typeof(obj) === "undefined" ||

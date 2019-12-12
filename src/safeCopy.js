@@ -25,7 +25,7 @@
  *
  * @returns A safe copy of **obj**.
  */
-export default function safeCopy(obj) {
+module.exports = function safeCopy(obj) {
 	"use strict";
 	return deepFreeze(deepCopy(obj));
 }

@@ -17,14 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import deepCopy from "./deepCopy";
-import deepEquals from "./deepEquals";
-import deepFreeze from "./deepFreeze";
-import safeCopy from "./safeCopy";
-
-export {
-	deepCopy,
-	deepEquals,
-	deepFreeze,
-	safeCopy
+module.exports = {
+	deepCopy: require("./deepCopy"),
+	deepEquals: require("./deepEquals"),
+	deepFreeze: require("./deepFreeze"),
+	safeCopy: require("./safeCopy")
 };

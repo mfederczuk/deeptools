@@ -30,7 +30,7 @@
  * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if
  *          otherwise.
  */
-export default function deepEquals(obj1, obj2) {
+module.exports = function deepEquals(obj1, obj2) {
 	"use strict";
 
 	if(typeof(obj1) === "undefined") {
