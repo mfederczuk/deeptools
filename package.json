@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "A set of utility functions that recursively operate on objects",
 	"main": "src/index.js",
+	"types": "types/index.d.ts",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/mfederczuk/deeptools.git"
