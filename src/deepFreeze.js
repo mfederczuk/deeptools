@@ -41,4 +41,4 @@ module.exports = function deepFreeze(obj) {
 	}
 
 	return Object.freeze(obj);
-}
+};

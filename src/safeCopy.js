@@ -28,4 +28,4 @@
 module.exports = function safeCopy(obj) {
 	"use strict";
 	return deepFreeze(deepCopy(obj));
-}
+};
