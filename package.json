@@ -1,6 +1,6 @@
 {
 	"name": "@mfederczuk/deeptools",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A set of utility functions that recursively operate on objects",
 	"main": "src/index.js",
 	"types": "types/index.d.ts",
