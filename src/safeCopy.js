@@ -17,6 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const deepCopy = require("./deepCopy");
+const deepFreeze = require("./deepFreeze");
+
 /**
  * Creates a safe copy of **obj** by creating a deep frozen copy of it.
  *
@@ -28,4 +31,4 @@
 module.exports = function safeCopy(obj) {
 	"use strict";
 	return deepFreeze(deepCopy(obj));
-}
+};

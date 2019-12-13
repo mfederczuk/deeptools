@@ -56,4 +56,4 @@ module.exports = function deepCopy(obj) {
 	Object.setPrototypeOf(copy, Object.getPrototypeOf(obj));
 
 	return copy;
-}
+};
