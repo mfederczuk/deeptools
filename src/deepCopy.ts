@@ -25,24 +25,9 @@
  * @returns A deep copy of **obj**.
  */
 export default function deepCopy<T>(obj: T): T {
-	if(typeof(obj) === "undefined" ||
-	   obj === null ||
-	   typeof(obj) === "boolean" ||
-	   typeof(obj) === "number" ||
-	   typeof(obj) === "string" ||
-	   typeof(obj) === "symbol" ||
-	   typeof(obj) === "function") return obj;
+	if(typeof(obj) !== "object" || obj === null) return obj;
 
-	if(obj instanceof Array) {
-		const copy: unknown[] = [];
-
-		const s = obj.length;
-		for(let i = 0; i < s; ++i) {
-			copy[i] = deepCopy(obj[i]);
-		}
-
-		return copy as unknown as T;
-	}
+	if(obj instanceof Array) return obj.map(deepCopy) as unknown as T;
 
 	const copy = {} as T;
 
