@@ -30,27 +30,9 @@
  *          otherwise.
  */
 export default function deepEquals(obj1: unknown, obj2: unknown): boolean {
-	if(typeof(obj1) === "undefined") {
-		return typeof(obj2) === "undefined";
-	}
-	if(obj1 === null) {
-		return obj2 === null;
-	}
-
-	if(typeof(obj1) === "boolean") {
-		return typeof(obj2) === "boolean" && obj1 === obj2;
-	}
-	if(typeof(obj1) === "number") {
-		return typeof(obj2) === "number" && obj1 === obj2;
-	}
-	if(typeof(obj1) === "string") {
-		return typeof(obj2) === "string" && obj1 === obj2;
-	}
-	if(typeof(obj1) === "symbol") {
-		return typeof(obj2) === "symbol" && obj1 === obj2;
-	}
-	if(typeof(obj1) === "function") {
-		return typeof(obj2) === "function" && obj1 === obj2;
+	if(typeof(obj1) !== "object" || obj1 === null ||
+	   typeof(obj2) !== "object" || obj2 === null) {
+		return obj1 === obj2;
 	}
 
 	if(obj1 instanceof Array) {
@@ -67,12 +49,12 @@ export default function deepEquals(obj1: unknown, obj2: unknown): boolean {
 	}
 
 	const props = [
-		...(Object.getOwnPropertyNames(obj1) as (keyof unknown)[]),
-		...(Object.getOwnPropertyNames(obj2) as (keyof unknown)[])
+		...(Object.getOwnPropertyNames(obj1) as (keyof object)[]),
+		...(Object.getOwnPropertyNames(obj2) as (keyof object)[])
 	];
 
 	for(const prop of props) {
-		if(!deepEquals((obj1 as never)[prop], (obj2 as never)[prop])) return false;
+		if(!deepEquals(obj1[prop], obj2[prop])) return false;
 	}
 
 	return true;
