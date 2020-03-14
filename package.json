@@ -2,8 +2,26 @@
 	"name": "@mfederczuk/deeptools",
 	"version": "1.0.2",
 	"description": "A set of utility functions that recursively operate on objects",
+	"keywords": [
+		"deep",
+		"copy",
+		"freeze"
+	],
+	"homepage": "https://github.com/mfederczuk/deeptools#readme",
+	"bugs": {
+		"url": "https://github.com/mfederczuk/deeptools/issues"
+	},
+	"license": "GPL-3.0-or-later",
+	"author": "Michael Federczuk <federczuk.michael@protonmail.com>",
+	"contributors": [
+		"Michael Federczuk <federczuk.michael@protonmail.com>"
+	],
 	"main": "src/index.js",
 	"types": "types/index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mfederczuk/deeptools.git"
+	},
 	"scripts": {
 		"test": "npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
 		"testDeepCopy": "node test/deepCopy.js",
@@ -11,21 +29,6 @@
 		"testDeepFreeze": "node test/deepFreeze.js",
 		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/mfederczuk/deeptools.git"
-	},
-	"keywords": [
-		"deep",
-		"copy",
-		"freeze"
-	],
-	"author": "Michael Federczuk <federczuk.michael@protonmail.com>",
-	"license": "GPL-3.0-or-later",
-	"bugs": {
-		"url": "https://github.com/mfederczuk/deeptools/issues"
-	},
-	"homepage": "https://github.com/mfederczuk/deeptools#readme",
 	"devDependencies": {
 		"eslint": "^6.7.2",
 		"jshint": "^2.11.0-rc1",
