@@ -1,7 +1,6 @@
-/* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
- * Copyright (C) 2019 Michael Federczuk
+ * Copyright (C) 2020 Michael Federczuk
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,33 +29,14 @@
  * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if
  *          otherwise.
  */
-module.exports = function deepEquals(obj1, obj2) {
-	"use strict";
-
-	if(typeof(obj1) === "undefined") {
-		return typeof(obj2) === "undefined";
-	}
-	if(obj1 === null) {
-		return obj2 === null;
-	}
-	if(typeof(obj1) === "boolean") {
-		return typeof(obj2) === "boolean" && obj1 === obj2;
-	}
-	if(typeof(obj1) === "number") {
-		return typeof(obj2) === "number" && obj1 === obj2;
-	}
-	if(typeof(obj1) === "string") {
-		return typeof(obj2) === "string" && obj1 === obj2;
-	}
-	if(typeof(obj1) === "symbol") {
-		return typeof(obj2) === "symbol" && obj1 === obj2;
-	}
-	if(typeof(obj1) == "function") {
-		return typeof(obj2) === "function" && obj1 === obj2;
+export default function deepEquals(obj1: unknown, obj2: unknown): boolean {
+	if(typeof(obj1) !== "object" || obj1 === null ||
+	   typeof(obj2) !== "object" || obj2 === null) {
+		return obj1 === obj2;
 	}
 
-	if(obj1 instanceof Array) {
-		if(!(obj2 instanceof Array)) return false;
+	if(obj1 instanceof Array || obj2 instanceof Array) {
+		if(!(obj1 instanceof Array) || !(obj2 instanceof Array)) return false;
 
 		const s = obj1.length;
 		if(s !== obj2.length) return false;
@@ -69,8 +49,8 @@ module.exports = function deepEquals(obj1, obj2) {
 	}
 
 	const props = [
-		...Object.getOwnPropertyNames(obj1),
-		...Object.getOwnPropertyNames(obj2)
+		...(Object.getOwnPropertyNames(obj1) as (keyof object)[]),
+		...(Object.getOwnPropertyNames(obj2) as (keyof object)[])
 	];
 
 	for(const prop of props) {
@@ -78,4 +58,4 @@ module.exports = function deepEquals(obj1, obj2) {
 	}
 
 	return true;
-};
+}

@@ -1,7 +1,5 @@
-/* jshint esversion: 6 */
-
-const { deepEquals } = require("../src");
-const assert = require("assert");
+import deepEquals from "../src/deepEquals";
+import assert from "assert";
 
 const foo = {
 	a: {
@@ -75,7 +73,7 @@ assert(!deepEquals({
 	"baz"
 ]));
 
-assert(deepEquals({
+assert(!deepEquals({
 	0: "foo",
 	1: "bar",
 	2: "baz",

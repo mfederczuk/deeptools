@@ -1,35 +1,51 @@
 {
 	"name": "@mfederczuk/deeptools",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A set of utility functions that recursively operate on objects",
-	"main": "src/index.js",
-	"types": "types/index.d.ts",
-	"scripts": {
-		"test": "npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
-		"testDeepCopy": "node test/deepCopy.js",
-		"testDeepEquals": "node test/deepEquals.js",
-		"testDeepFreeze": "node test/deepFreeze.js",
-		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/mfederczuk/deeptools.git"
-	},
 	"keywords": [
 		"deep",
 		"copy",
 		"freeze"
 	],
-	"author": "Michael Federczuk <federczuk.michael@protonmail.com>",
-	"license": "GPL-3.0-or-later",
+	"homepage": "https://github.com/mfederczuk/deeptools#readme",
 	"bugs": {
 		"url": "https://github.com/mfederczuk/deeptools/issues"
 	},
-	"homepage": "https://github.com/mfederczuk/deeptools#readme",
+	"license": "GPL-3.0-or-later",
+	"author": "Michael Federczuk <federczuk.michael@protonmail.com>",
+	"contributors": [
+		"Michael Federczuk <federczuk.michael@protonmail.com>"
+	],
+	"main": "out/index.js",
+	"types": "types/index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mfederczuk/deeptools.git"
+	},
+	"scripts": {
+		"lint": "./node_modules/.bin/eslint $(find . -type f -wholename './src/*' -name '*.ts' )",
+
+		"build": "./node_modules/.bin/tsc",
+		"clean": "rm -rf ./out ./types",
+		"rebuild": "npm run clean && npm run build",
+
+		"test": "npm run lint && npm run build && npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
+		"testDeepCopy": "./node_modules/.bin/ts-node test/deepCopy.ts",
+		"testDeepEquals": "./node_modules/.bin/ts-node test/deepEquals.ts",
+		"testDeepFreeze": "./node_modules/.bin/ts-node test/deepFreeze.ts",
+		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze",
+
+		"install": "npm run build",
+		"preuninstall": "npm run clean"
+	},
+	"dependencies": {
+		"@types/node": "^13.9.1",
+		"typescript": "^3.8.3"
+	},
 	"devDependencies": {
-		"eslint": "^6.7.2",
-		"jshint": "^2.11.0-rc1",
-		"tslint": "^5.20.1",
-		"typescript": "^3.7.3"
+		"@typescript-eslint/eslint-plugin": "^2.23.0",
+		"@typescript-eslint/parser": "^2.23.0",
+		"eslint": "^6.8.0",
+		"ts-node": "^8.6.2"
 	}
 }

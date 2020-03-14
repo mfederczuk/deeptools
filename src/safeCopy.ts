@@ -1,7 +1,6 @@
-/* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
- * Copyright (C) 2019 Michael Federczuk
+ * Copyright (C) 2020 Michael Federczuk
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const deepCopy = require("./deepCopy");
-const deepFreeze = require("./deepFreeze");
+import deepCopy from "./deepCopy";
+import deepFreeze from "./deepFreeze";
+
+/**
+ * Creates a safe copy of **arr** by creating a deep frozen copy of it.
+ *
+ * @param arr
+ *        The array to create a safe copy of.
+ *
+ * @returns A safe copy of **arr**.
+ */
+function safeCopy<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
+
+/**
+ * Creates a safe copy of **arr** by creating a deep frozen copy of it.
+ *
+ * @param arr
+ *        The array to create a safe copy of.
+ *
+ * @returns A safe copy of **arr**.
+ */
+function safeCopy<T>(arr: T[]): readonly Readonly<T>[];
 
 /**
  * Creates a safe copy of **obj** by creating a deep frozen copy of it.
@@ -28,7 +47,10 @@ const deepFreeze = require("./deepFreeze");
  *
  * @returns A safe copy of **obj**.
  */
-module.exports = function safeCopy(obj) {
-	"use strict";
+function safeCopy<T>(obj: T): Readonly<T>;
+
+function safeCopy<T>(obj: (T[][] | T[] | T)): (readonly (readonly Readonly<T>[])[] | readonly Readonly<T>[] | Readonly<T>) {
 	return deepFreeze(deepCopy(obj));
-};
+}
+
+export default safeCopy;

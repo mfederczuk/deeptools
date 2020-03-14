@@ -1,7 +1,6 @@
-/* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
- * Copyright (C) 2019 Michael Federczuk
+ * Copyright (C) 2020 Michael Federczuk
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +17,25 @@
  */
 
 /**
- * Recursively freezes **obj** with all of its properties.
+ * Creates a deep copy of **obj**.
  *
  * @param obj
- *        The object to freeze.
+ *        The object to create a deep copy of.
  *
- * @returns **obj**, deeply frozen.
+ * @returns A deep copy of **obj**.
  */
-module.exports = function deepFreeze(obj) {
-	"use strict";
+export default function deepCopy<T>(obj: T): T {
+	if(typeof(obj) !== "object" || obj === null) return obj;
 
-	if(typeof(obj) !== "undefined" &&
-	   obj !== null &&
-	   typeof(obj) !== "boolean" &&
-	   typeof(obj) !== "number" &&
-	   typeof(obj) !== "string" &&
-	   typeof(obj) !== "function") {
+	if(obj instanceof Array) return obj.map(deepCopy) as unknown as T;
 
-		for(const prop of Object.getOwnPropertyNames(obj)) {
-			deepFreeze(obj[prop]);
-		}
-	}
+	const copy = {} as T;
 
-	return Object.freeze(obj);
-};
+	(Object.getOwnPropertyNames(obj) as (keyof T)[]).forEach((prop) => {
+		copy[prop] = deepCopy(obj[prop]);
+	});
+
+	Object.setPrototypeOf(copy, Object.getPrototypeOf(obj));
+
+	return copy;
+}
