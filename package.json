@@ -26,7 +26,7 @@
 		"lint": "./node_modules/.bin/eslint $(find . -type f -wholename './src/*' -name '*.ts' )",
 
 		"build": "./node_modules/.bin/tsc",
-		"clean": "rm -rf ./out",
+		"clean": "rm -rf ./out ./types",
 		"rebuild": "npm run clean && npm run build",
 
 		"test": "npm run lint && npm run build && npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
