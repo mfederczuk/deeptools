@@ -7,6 +7,7 @@ labels: error
 # Error Report #
 
 * **DeepTools Version**: _____
+* **Operating System**: _____
 
 ## Description ##
 
