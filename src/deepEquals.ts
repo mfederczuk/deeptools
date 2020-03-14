@@ -49,7 +49,7 @@ export default function deepEquals(obj1: unknown, obj2: unknown): boolean {
 	if(typeof(obj1) === "symbol") {
 		return typeof(obj2) === "symbol" && obj1 === obj2;
 	}
-	if(typeof(obj1) == "function") {
+	if(typeof(obj1) === "function") {
 		return typeof(obj2) === "function" && obj1 === obj2;
 	}
 
