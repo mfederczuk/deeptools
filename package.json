@@ -16,7 +16,7 @@
 	"contributors": [
 		"Michael Federczuk <federczuk.michael@protonmail.com>"
 	],
-	"main": "src/index.js",
+	"main": "out/index.js",
 	"types": "types/index.d.ts",
 	"repository": {
 		"type": "git",
