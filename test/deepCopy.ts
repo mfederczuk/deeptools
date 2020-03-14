@@ -1,7 +1,5 @@
-/* jshint esversion: 6 */
-
-const { deepCopy } = require("../src");
-const assert = require("assert");
+import deepCopy from "../src/deepCopy";
+import assert from "assert";
 
 const foo = {
 	a: {
@@ -29,7 +27,8 @@ const foo = {
 			xyz: "asd"
 		}
 	]
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+} as any;
 
 const bar = deepCopy(foo);
 

@@ -1,7 +1,7 @@
 # DeepTools #
 
-[version_shield]: https://img.shields.io/badge/version-1.0.2-blue.svg
-[latest_release]: https://github.com/mfederczuk/deep-tools/releases/latest "Latest Release"
+[version_shield]: https://img.shields.io/badge/version-1.0.3-blue.svg
+[latest_release]: https://github.com/mfederczuk/deeptools/releases/latest "Latest Release"
 [![version: N/A][version_shield]][latest_release]
 [![Changelog](https://img.shields.io/badge/-Changelog-blue)](./CHANGELOG.md "Changelog")
 
@@ -25,7 +25,7 @@ yarn add @mfederczuk/deeptools
 
 ## Usage ##
 
-### [`deepCopy`](./src/deepCopy.js) ###
+### [`deepCopy`](./src/deepCopy.ts) ###
 
 ```ts
 function deepCopy<T>(obj: T): T;
@@ -33,28 +33,45 @@ function deepCopy<T>(obj: T): T;
 
 Creates a deep copy of **obj**.
 
-### [`deepEquals`](./src/deepEquals.js) ###
+### [`deepEquals`](./src/deepEquals.ts) ###
 
 ```ts
-function deepEquals(obj1: any, obj2: any): boolean;
+function deepEquals(obj1: unknown, obj2: unknown): boolean;
 ```
 
 Checks if **obj1** and **obj2** are equal by recursing through their properties.
 
-### [`deepFreeze`](./src/deepFreeze.js) ###
+### [`deepFreeze`](./src/deepFreeze.ts) ###
 
 ```ts
-function deepFreeze<T>(arr: T[]): ReadonlyArray<T>;
-function deepFreeze<T extends Function>(fun: T): T;
+function deepFreeze<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
+```
+
+Recursively freezes **arr**, all of **arr**'s items and all items of **arr**'s items.
+
+```ts
+function deepFreeze<T>(arr: T[]): readonly Readonly<T>[];
+```
+
+Recursively freezes **arr** and all of its items.
+
+```ts
 function deepFreeze<T>(obj: T): Readonly<T>;
 ```
 
-Recursively freezes **obj** with all of its properties.
+Recursively freezes **obj** and all of its properties.
 
-### [`safeCopy`](./src/safeCopy.js) ###
+### [`safeCopy`](./src/safeCopy.ts) ###
 
 ```ts
-function safeCopy<T>(obj: T): T;
+function safeCopy<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
+function safeCopy<T>(arr: T[]): readonly Readonly<T>[];
+```
+
+Creates a safe copy of **arr** by creating a deep frozen copy of it.
+
+```ts
+function safeCopy<T>(obj: T): Readonly<T>;
 ```
 
 Creates a safe copy of **obj** by creating a deep frozen copy of it.
