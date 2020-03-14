@@ -31,9 +31,9 @@ export default function deepCopy<T>(obj: T): T {
 
 	const copy = {} as T;
 
-	for(const prop of Object.getOwnPropertyNames(obj) as (keyof T)[]) {
+	(Object.getOwnPropertyNames(obj) as (keyof T)[]).forEach((prop) => {
 		copy[prop] = deepCopy(obj[prop]);
-	}
+	});
 
 	Object.setPrototypeOf(copy, Object.getPrototypeOf(obj));
 
