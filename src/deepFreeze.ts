@@ -1,4 +1,3 @@
-/* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
  * Copyright (C) 2020 Michael Federczuk
@@ -25,9 +24,29 @@
  *
  * @returns **obj**, deeply frozen.
  */
-module.exports = function deepFreeze(obj) {
-	"use strict";
+function deepFreeze<T>(obj: T): Readonly<T>;
 
+/**
+ * Recursively freezes **arr** with all of its items.
+ *
+ * @param arr
+ *        The array to freeze.
+ *
+ * @returns **arr**, deeply frozen.
+ */
+function deepFreeze<T>(arr: T[]): readonly T[];
+
+/**
+ * Recursively freezes **fun**.
+ *
+ * @param fun
+ *        The function to freeze.
+ *
+ * @returns **fun**, deeply frozen.
+ */
+function deepFreeze<T extends Function>(fun: T): T;
+
+function deepFreeze<T>(obj: T[] | T): (readonly T[] | T | Readonly<T>) {
 	if(typeof(obj) !== "undefined" &&
 	   obj !== null &&
 	   typeof(obj) !== "boolean" &&
@@ -35,10 +54,12 @@ module.exports = function deepFreeze(obj) {
 	   typeof(obj) !== "string" &&
 	   typeof(obj) !== "function") {
 
-		for(const prop of Object.getOwnPropertyNames(obj)) {
+		for(const prop of Object.getOwnPropertyNames(obj) as (keyof T[] & keyof T)[]) {
 			deepFreeze(obj[prop]);
 		}
 	}
 
 	return Object.freeze(obj);
-};
+}
+
+export default deepFreeze;

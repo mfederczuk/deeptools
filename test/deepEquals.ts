@@ -1,7 +1,5 @@
-/* jshint esversion: 6 */
-
-const { deepEquals } = require("../src");
-const assert = require("assert");
+import deepEquals from "../src/deepEquals";
+import assert from "assert";
 
 const foo = {
 	a: {

@@ -16,12 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export declare function deepCopy<T>(obj: T): T;
-
-export declare function deepEquals(obj1: any, obj2: any): boolean;
-
-export declare function deepFreeze<T>(arr: T[]): ReadonlyArray<T>;
-export declare function deepFreeze<T extends Function>(fun: T): T;
-export declare function deepFreeze<T>(obj: T): Readonly<T>;
-
-export declare function safeCopy<T>(obj: T): T;
+export { default as deepCopy } from "./deepCopy";
+export { default as deepEquals } from "./deepEquals";
+export { default as deepFreeze } from "./deepFreeze";
+export { default as safeCopy } from "./safeCopy";

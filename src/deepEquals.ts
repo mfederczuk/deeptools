@@ -1,4 +1,3 @@
-/* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
  * Copyright (C) 2020 Michael Federczuk
@@ -30,15 +29,14 @@
  * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if
  *          otherwise.
  */
-module.exports = function deepEquals(obj1, obj2) {
-	"use strict";
-
+export default function deepEquals(obj1: unknown, obj2: unknown): boolean {
 	if(typeof(obj1) === "undefined") {
 		return typeof(obj2) === "undefined";
 	}
 	if(obj1 === null) {
 		return obj2 === null;
 	}
+
 	if(typeof(obj1) === "boolean") {
 		return typeof(obj2) === "boolean" && obj1 === obj2;
 	}
@@ -69,13 +67,13 @@ module.exports = function deepEquals(obj1, obj2) {
 	}
 
 	const props = [
-		...Object.getOwnPropertyNames(obj1),
-		...Object.getOwnPropertyNames(obj2)
+		...(Object.getOwnPropertyNames(obj1) as (keyof unknown)[]),
+		...(Object.getOwnPropertyNames(obj2) as (keyof unknown)[])
 	];
 
 	for(const prop of props) {
-		if(!deepEquals(obj1[prop], obj2[prop])) return false;
+		if(!deepEquals((obj1 as never)[prop], (obj2 as never)[prop])) return false;
 	}
 
 	return true;
-};
+}

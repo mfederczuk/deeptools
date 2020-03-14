@@ -1,4 +1,3 @@
-/* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
  * Copyright (C) 2020 Michael Federczuk
@@ -25,9 +24,7 @@
  *
  * @returns A deep copy of **obj**.
  */
-module.exports = function deepCopy(obj) {
-	"use strict";
-
+export default function deepCopy<T>(obj: T): T {
 	if(typeof(obj) === "undefined" ||
 	   obj === null ||
 	   typeof(obj) === "boolean" ||
@@ -37,23 +34,23 @@ module.exports = function deepCopy(obj) {
 	   typeof(obj) === "function") return obj;
 
 	if(obj instanceof Array) {
-		const copy = [];
+		const copy: unknown[] = [];
 
 		const s = obj.length;
 		for(let i = 0; i < s; ++i) {
 			copy[i] = deepCopy(obj[i]);
 		}
 
-		return copy;
+		return copy as unknown as T;
 	}
 
-	const copy = {};
+	const copy = {} as T;
 
-	for(const prop of Object.getOwnPropertyNames(obj)) {
+	for(const prop of Object.getOwnPropertyNames(obj) as (keyof T)[]) {
 		copy[prop] = deepCopy(obj[prop]);
 	}
 
 	Object.setPrototypeOf(copy, Object.getPrototypeOf(obj));
 
 	return copy;
-};
+}

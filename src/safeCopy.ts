@@ -1,4 +1,3 @@
-/* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
  * Copyright (C) 2020 Michael Federczuk
@@ -17,9 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-module.exports = {
-	deepCopy: require("./deepCopy"),
-	deepEquals: require("./deepEquals"),
-	deepFreeze: require("./deepFreeze"),
-	safeCopy: require("./safeCopy")
-};
+import deepCopy from "./deepCopy";
+import deepFreeze from "./deepFreeze";
+
+/**
+ * Creates a safe copy of **obj** by creating a deep frozen copy of it.
+ *
+ * @param obj
+ *        The object to create a safe copy of.
+ *
+ * @returns A safe copy of **obj**.
+ */
+export default function safeCopy<T>(obj: T): T {
+	return deepFreeze(deepCopy(obj));
+}
