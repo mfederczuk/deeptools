@@ -1,7 +1,7 @@
 /* jshint esversion: 6 */
 /*
  * A set of utility functions that recursively operate on objects.
- * Copyright (C) 2019 Michael Federczuk
+ * Copyright (C) 2020 Michael Federczuk
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
