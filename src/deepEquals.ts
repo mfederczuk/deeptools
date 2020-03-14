@@ -35,8 +35,8 @@ export default function deepEquals(obj1: unknown, obj2: unknown): boolean {
 		return obj1 === obj2;
 	}
 
-	if(obj1 instanceof Array) {
-		if(!(obj2 instanceof Array)) return false;
+	if(obj1 instanceof Array || obj2 instanceof Array) {
+		if(!(obj1 instanceof Array) || !(obj2 instanceof Array)) return false;
 
 		const s = obj1.length;
 		if(s !== obj2.length) return false;

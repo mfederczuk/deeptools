@@ -73,7 +73,7 @@ assert(!deepEquals({
 	"baz"
 ]));
 
-assert(deepEquals({
+assert(!deepEquals({
 	0: "foo",
 	1: "bar",
 	2: "baz",
