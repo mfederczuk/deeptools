@@ -9,25 +9,35 @@
 	],
 	"homepage": "https://github.com/mfederczuk/deeptools#readme",
 	"bugs": {
-		"url": "https://github.com/mfederczuk/deeptools/issues"
+		"url": "https://github.com/mfederczuk/deeptools/issues",
+		"email": "federczuk.michael@protonmail.com"
 	},
 	"license": "GPL-3.0-or-later",
 	"author": "Michael Federczuk <federczuk.michael@protonmail.com>",
 	"contributors": [
 		"Michael Federczuk <federczuk.michael@protonmail.com>"
 	],
+	"files": [
+		"out",
+		"types"
+	],
 	"main": "out/index.js",
 	"types": "types/index.d.ts",
+	"directories": {
+		"lib": "out"
+	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/mfederczuk/deeptools.git"
+		"url": "https://github.com/mfederczuk/deeptools.git"
 	},
 	"scripts": {
-		"lint": "./node_modules/.bin/eslint $(find . -type f -wholename './src/*' -name '*.ts' )",
+		"lint": "node_modules/.bin/eslint src test",
 
-		"build": "./node_modules/.bin/tsc",
-		"clean": "rm -rf ./out ./types",
+		"build": "node_modules/.bin/tsc",
+		"clean": "rm -rf out types",
 		"rebuild": "npm run clean && npm run build",
+
+		"uglify": "find out -type f -name '*.js' -exec node_modules/.bin/uglifyjs -o '{}' -- '{}' \\;",
 
 		"test": "npm run lint && npm run build && npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
 		"testDeepCopy": "./node_modules/.bin/ts-node test/deepCopy.ts",
@@ -35,17 +45,15 @@
 		"testDeepFreeze": "./node_modules/.bin/ts-node test/deepFreeze.ts",
 		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze",
 
-		"install": "npm run build",
-		"preuninstall": "npm run clean"
-	},
-	"dependencies": {
-		"@types/node": "^13.11.1",
-		"typescript": "^3.8.3"
+		"prepare": "npm run clean && npm run test && npm run uglify"
 	},
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^2.27.0",
-		"@typescript-eslint/parser": "^2.27.0",
-		"eslint": "^6.8.0",
-		"ts-node": "^8.8.2"
+		"@types/node": "^16.11.6",
+		"@typescript-eslint/eslint-plugin": "^5.3.0",
+		"@typescript-eslint/parser": "^5.3.0",
+		"eslint": "^8.1.0",
+		"ts-node": "^10.4.0",
+		"typescript": "^4.4.4",
+		"uglify-js": "^3.14.2"
 	}
 }

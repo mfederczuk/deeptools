@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable @typescript-eslint/ban-types */
+
 /**
  * Checks if **obj1** and **obj2** are equal by recursing through their
  * properties.
