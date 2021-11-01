@@ -1,6 +1,6 @@
 {
 	"name": "@mfederczuk/deeptools",
-	"version": "1.0.4",
+	"version": "1.1.0",
 	"description": "A set of utility functions that recursively operate on objects",
 	"keywords": [
 		"deep",

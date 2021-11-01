@@ -1,8 +1,8 @@
 # DeepTools #
 
-[version_shield]: https://img.shields.io/badge/version-1.0.4-blue.svg
+[version_shield]: https://img.shields.io/badge/version-1.1.0-blue.svg
 [latest_release]: https://github.com/mfederczuk/deeptools/releases/latest "Latest Release"
-[![version: 1.0.4][version_shield]][latest_release]
+[![version: 1.1.0][version_shield]][latest_release]
 [![Changelog](https://img.shields.io/badge/-Changelog-blue)](./CHANGELOG.md "Changelog")
 
 ## About ##
