@@ -6,7 +6,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2021-11-01 ##
+
+[1.1.0]: https://github.com/mfederczuk/deeptools/compare/v1.0.4...v1.1.0
+
+### Fixed ###
+
+* `tsc` is not anymore needed when installing the package - this caused errors.  
+  Don't know how it worked before, but it only started causing troubles for me now.
+
+  **DeepTools** now has no regular `dependencies` anymore in general - only `devDependencies`
+
+### Security ###
+
+* Updated dependencies
+
 ## [1.0.4] - 2020-04-10 ##
+
+[1.0.4]: https://github.com/mfederczuk/deeptools/compare/v1.0.3...v1.0.4
 
 ### Security ###
 
@@ -18,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed ###
 
-* Fixed the signatures and implemention of some functions.
+* Fixed the signatures and implementation of some functions.
 
 ## [1.0.2] - 2019-12-13 ##
 
