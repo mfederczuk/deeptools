@@ -1,6 +1,6 @@
 /*
  * A set of utility functions that recursively operate on objects.
- * Copyright (C) 2020 Michael Federczuk
+ * Copyright (C) 2020  Michael Federczuk
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+/* eslint-disable @typescript-eslint/ban-types */
 
 /**
  * Checks if **obj1** and **obj2** are equal by recursing through their

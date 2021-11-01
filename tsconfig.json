@@ -3,9 +3,15 @@
 		"declaration": true,
 		"declarationDir": "types",
 		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"module": "commonjs",
 		"noImplicitAny": true,
 		"outDir": "out",
-		"strict": true
+		"removeComments": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "ES2015"
 	},
-	"include": ["src"]
+	"include": ["src"],
+	"exclude": ["node_modules"]
 }
