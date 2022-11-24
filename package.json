@@ -18,6 +18,9 @@
 		"Michael Federczuk <federczuk.michael@protonmail.com>"
 	],
 	"files": [
+		"COPYING.txt",
+		"LICENSE.txt",
+		"LICENSES",
 		"out",
 		"types"
 	],
@@ -31,29 +34,29 @@
 		"url": "https://github.com/mfederczuk/deeptools.git"
 	},
 	"scripts": {
-		"lint": "node_modules/.bin/eslint src test",
+		"lint": "npx --package=eslint -- eslint src test",
 
-		"build": "node_modules/.bin/tsc",
+		"build": "npx --package=typescript -- tsc",
 		"clean": "rm -rf out types",
-		"rebuild": "npm run clean && npm run build",
+		"rebuild": "npm run clean && npm run build --",
 
-		"uglify": "find out -type f -name '*.js' -exec node_modules/.bin/uglifyjs -o '{}' -- '{}' \\;",
+		"uglify": "find out -type f -name '*.js' -exec npx --package=uglifyjs -- uglifyjs -o '{}' -- '{}' \\;",
 
 		"test": "npm run lint && npm run build && npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
-		"testDeepCopy": "./node_modules/.bin/ts-node test/deepCopy.ts",
-		"testDeepEquals": "./node_modules/.bin/ts-node test/deepEquals.ts",
-		"testDeepFreeze": "./node_modules/.bin/ts-node test/deepFreeze.ts",
+		"testDeepCopy": "npx --package=ts-node -- ts-node test/deepCopy.ts",
+		"testDeepEquals": "npx --package=ts-node -- ts-node test/deepEquals.ts",
+		"testDeepFreeze": "npx --package=ts-node -- ts-node test/deepFreeze.ts",
 		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze",
 
 		"prepare": "npm run clean && npm run test && npm run uglify"
 	},
 	"devDependencies": {
-		"@types/node": "^16.11.6",
-		"@typescript-eslint/eslint-plugin": "^5.3.0",
-		"@typescript-eslint/parser": "^5.3.0",
-		"eslint": "^8.1.0",
-		"ts-node": "^10.4.0",
-		"typescript": "^4.4.4",
-		"uglify-js": "^3.14.2"
+		"@types/node": "^18.11.9",
+		"@typescript-eslint/eslint-plugin": "^5.44.0",
+		"@typescript-eslint/parser": "^5.44.0",
+		"eslint": "^8.28.0",
+		"ts-node": "^10.9.1",
+		"typescript": "^4.9.3",
+		"uglify-js": "^3.17.4"
 	}
 }
