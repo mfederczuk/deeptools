@@ -1,13 +1,10 @@
 ---
+# SPDX-License-Identifier: CC0-1.0
 name: Help Wanted
 about: Ask for help on a task
-labels: help wanted
+labels: 'Scope: N/A, Help Wanted, Priority #2: Medium, Status #1: Requested'
 ---
 
 # Help Wanted #
 
-**On Issue**: _____
-
-## Description ##
-
-Describe what you need help with.
+[description of what needs extra attention]

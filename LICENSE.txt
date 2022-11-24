@@ -1,0 +1,5 @@
+DeepTools is licensed under:
+
+        GNU General Public License v3.0 or later (LICENSES/GPL-3.0.txt)
+
+For licensing of individual files see: 'COPYING.txt'

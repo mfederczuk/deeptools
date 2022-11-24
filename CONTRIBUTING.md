@@ -1,34 +1,43 @@
-# DeepTools Contribution Guidelines #
+<!--
+  Copyright (c) 2022 Michael Federczuk
+  SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 
-Here are a few rules and guidelines you need to follow if you want to contribute
- to this project.  
-It's much appreciated if you do decide to contribute something, whether it is
- an issue or a pull request!
+# Contribution Guidelines #
 
-For any sort of contribution you will need to accept and follow the
- [code of conduct](./CODE_OF_CONDUCT.md). Here's the short version if you don't
- have the time to read through it all: *Don't be a dick to anyone.*  
-I have nothing against swearing or joking around, but don't go too far.  
-Everyone should feel welcome and accepted here, doesn't matter who they are.
+Any contribution to **DeepTools** is welcome and greatly appreciated!  
+But before doing anything, please read and follow these rules and guidelines:
 
-The main and only language in this repository is **English**. Please refrain
- from speaking any other language.  
-Nobody will go after you for writing a few words in another language, just don't
- write entire sentences in a language that isn't English.
+* **Follow the code of conduct & keep it professional**  
+  For any sort of contribution and/or participation to this repository and the project, the
+  [code of conduct](CODE_OF_CONDUCT.md) must be accepted and followed.  
+  In short: everyone should feel welcome and accepted here.  
+  This does not mean that jokes and swearing/cursing is not allowed - just keep it civilized and respectful.
 
-This project **strictly** adheres to [Semantic Versioning] and a
- [changelog](./CHANGELOG.md) file is kept based on the [Keep a Changelog] format.
+* **Use exclusively (American) English**  
+  To make sure that everyone is able to understand any conversion and help out if necessary, please do not use any
+  language other than English, more specifically **American English**. (text and source code is included)
 
-[Creating a new issue] is an easy and fast way to contribute.  
-There are several issue templates to help you contribute suggestions, requests,
- reports or questions. While it is recommended to use these templates, it's not
- mandatory.
+* **Avoid Duplicates**  
+  When creating new issues, pull requests or discussions, make sure that it doesn't already exist.  
+  Look for both open and closed issues/PRs.
 
-Follow both the [Code Style Guides] and the [Git Guides] of this project and
- always use the pull request template.
+* **Make use of GitHub Reactions**  
+  Don't post comments solely consisting of "+1", "-1", "👍", "👎", etc.  
+  Instead, use **GitHub** reactions to "upvote" or "downvote" other issues, pull requests, discussions or comments.
 
-[Semantic Versioning]: https://semver.org/spec/v2.0.0.html "Semantic Versioning v2.0.0"
-[Keep a Changelog]: https://keepachangelog.com/en/1.0.0/ "Keep a Changelog v1.0.0"
-[Creating a new issue]: https://github.com/mfederczuk/deeptools/issues/new/choose "Create new Issue"
-[Code Style Guides]: https://mfederczuk.github.io/code-guides "Code Style Guides"
-[Git Guides]: https://mfederczuk.github.io/git-guides "Git Guides"
+* **Development Guides**  
+  When submitting a pull request, make sure to read through and follow the [Development Guidelines](DEVELOPING.md).
+
+There are a variety of things that can be done to contribute:
+
+* [Creating an issue](https://github.com/mfederczuk/deeptools/issues/new/choose)
+* [Submitting a pull request](https://github.com/mfederczuk/deeptools/compare)
+* [Starting a new discussion](https://github.com/mfederczuk/deeptools/discussions/new)
+* Commenting on ...
+  * [Issues](https://github.com/mfederczuk/deeptools/issues)
+  * [Pull Requests](https://github.com/mfederczuk/deeptools/pulls)
+  * [Discussions](https://github.com/mfederczuk/deeptools/discussions)
+
+Also, keep in mind that all contributions to any files (existing or new) are subject to the [`LICENSE.txt`](LICENSE.txt)
+and [`COPYING.txt`](COPYING.txt) files.
