@@ -15,19 +15,21 @@
 	},
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"ecmaVersion": 2018,
+		"ecmaVersion": 2015,
 		"sourceType": "module"
 	},
 	"plugins": [
 		"@typescript-eslint"
 	],
 	"rules": {
+		"@typescript-eslint/no-empty-function": "off",
 		"@typescript-eslint/no-inferrable-types": "warn",
 		"@typescript-eslint/no-namespace": "off",
 		"arrow-parens": "warn",
 		"camelcase": "warn",
 		"eqeqeq": "error",
 		"no-empty": "warn",
+		"no-empty-function": "warn",
 		"no-extra-semi": "warn",
 		"no-inner-declarations": "off",
 		"no-mixed-spaces-and-tabs": "off",
@@ -43,6 +45,14 @@
 				"nonwords": false
 			}
 		],
-		"spaced-comment": "warn"
+		"spaced-comment": [
+			"warn",
+			"always",
+			{
+				"line":{
+					"markers": ["#region", "#endregion"]
+				}
+			}
+		]
 	}
 }

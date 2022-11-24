@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: CC0-1.0
 {
 	"compilerOptions": {
 		"declaration": true,
@@ -13,5 +14,4 @@
 		"target": "ES2015"
 	},
 	"include": ["src"],
-	"exclude": ["node_modules"]
 }
