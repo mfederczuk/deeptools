@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import deepEquals from "../src/deepEquals";
+import { deepEquals } from "../src/deepEquals";
 import assert from "assert";
 
 const foo = {

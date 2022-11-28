@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import deepCopy from "../src/deepCopy";
+import { deepCopy } from "../src/deepCopy";
 import assert from "assert";
 
 const foo = {

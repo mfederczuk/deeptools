@@ -11,7 +11,7 @@
  *
  * @returns A deep copy of **obj**.
  */
-export default function deepCopy<T>(obj: T): T {
+export function deepCopy<T>(obj: T): T {
 	if(typeof(obj) !== "object" || obj === null) return obj;
 
 	if(obj instanceof Array) return obj.map(deepCopy) as unknown as T;

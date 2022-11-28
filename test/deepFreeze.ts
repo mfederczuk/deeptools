@@ -5,7 +5,7 @@
 
 /* eslint-disable no-empty */
 
-import deepFreeze from "../src/deepFreeze";
+import { deepFreeze } from "../src/deepFreeze";
 import assert from "assert";
 
 const foo = deepFreeze({

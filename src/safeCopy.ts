@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import deepCopy from "./deepCopy";
-import deepFreeze from "./deepFreeze";
+import { deepCopy } from "./deepCopy";
+import { deepFreeze } from "./deepFreeze";
 
 /**
  * Creates a safe copy of **arr** by creating a deep frozen copy of it.
@@ -40,4 +40,4 @@ function safeCopy<T>(obj: (T[][] | T[] | T)): (readonly (readonly Readonly<T>[])
 	return deepFreeze(deepCopy(obj));
 }
 
-export default safeCopy;
+export { safeCopy };

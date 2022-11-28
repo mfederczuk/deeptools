@@ -44,4 +44,4 @@ function deepFreeze<T>(obj: (T[][] | T[] | T)): (readonly (readonly Readonly<T>[
 	return Object.freeze(obj);
 }
 
-export default deepFreeze;
+export { deepFreeze };

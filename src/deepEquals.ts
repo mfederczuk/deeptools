@@ -18,7 +18,7 @@
  * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if
  *          otherwise.
  */
-export default function deepEquals(obj1: unknown, obj2: unknown): boolean {
+export function deepEquals(obj1: unknown, obj2: unknown): boolean {
 	if(typeof(obj1) !== "object" || obj1 === null ||
 	   typeof(obj2) !== "object" || obj2 === null) {
 		return obj1 === obj2;
