@@ -37,6 +37,7 @@
 		"lint": "npx --package=eslint -- eslint src test",
 
 		"build": "npx --package=typescript -- tsc",
+		"build-watch": "npx --package=typescript -- tsc --watch",
 		"clean": "rm -rf out types",
 		"rebuild": "npm run clean && npm run build --",
 
