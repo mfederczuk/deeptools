@@ -9,6 +9,15 @@ import { deepFreeze } from "./deepFreeze";
 /**
  * Creates a deep copy of **arr** that is also deeply frozen.
  *
+ * @param arr The 3-dimensional array to create a deeply frozen copy of.
+ *
+ * @returns A deeply frozen copy of **arr**.
+ */
+function safeCopy<T>(arr: readonly (readonly (readonly T[])[])[]): readonly (readonly (readonly Readonly<T>[])[])[];
+
+/**
+ * Creates a deep copy of **arr** that is also deeply frozen.
+ *
  * @param arr The 2-dimensional array to create a deeply frozen copy of.
  *
  * @returns A deeply frozen copy of **arr**.

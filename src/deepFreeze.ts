@@ -6,6 +6,15 @@
 /**
  * Recursively freezes **arr** and all of its items & other properties.
  *
+ * @param arr The 3-dimensional array to freeze.
+ *
+ * @returns **arr**, deeply frozen.
+ */
+function deepFreeze<T>(arr: readonly (readonly (readonly T[])[])[]): readonly (readonly (readonly Readonly<T>[])[])[];
+
+/**
+ * Recursively freezes **arr** and all of its items & other properties.
+ *
  * @param arr The 2-dimensional array to freeze.
  *
  * @returns **arr**, deeply frozen.
