@@ -10,7 +10,7 @@
  *
  * @returns **arr**, deeply frozen.
  */
-function deepFreeze<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
+function deepFreeze<T>(arr: readonly (readonly T[])[]): readonly (readonly Readonly<T>[])[];
 
 /**
  * Recursively freezes **arr** and all of its items & other properties.
@@ -19,7 +19,7 @@ function deepFreeze<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
  *
  * @returns **arr**, deeply frozen.
  */
-function deepFreeze<T>(arr: T[]): readonly Readonly<T>[];
+function deepFreeze<T>(arr: readonly T[]): readonly Readonly<T>[];
 
 /**
  * Recursively freezes **obj** and all of its properties.
@@ -30,7 +30,7 @@ function deepFreeze<T>(arr: T[]): readonly Readonly<T>[];
  */
 function deepFreeze<T>(obj: T): Readonly<T>;
 
-function deepFreeze<T>(obj: (T[][] | T[] | T)): (readonly (readonly Readonly<T>[])[] | readonly Readonly<T>[] | Readonly<T>) {
+function deepFreeze<T>(obj: T): Readonly<T> {
 	if(typeof(obj) !== "object" || obj === null) return obj;
 
 	(Object.getOwnPropertyNames(obj) as ((keyof T[][] & keyof T[] & keyof T)[])).forEach((prop) => {

@@ -13,7 +13,7 @@ import { deepFreeze } from "./deepFreeze";
  *
  * @returns A deeply frozen copy of **arr**.
  */
-function safeCopy<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
+function safeCopy<T>(arr: readonly (readonly T[])[]): readonly (readonly Readonly<T>[])[];
 
 /**
  * Creates a deep copy of **arr** that is also deeply frozen.
@@ -22,7 +22,7 @@ function safeCopy<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
  *
  * @returns A deeply frozen copy of **arr**.
  */
-function safeCopy<T>(arr: T[]): readonly Readonly<T>[];
+function safeCopy<T>(arr: readonly T[]): readonly Readonly<T>[];
 
 /**
  * Creates a deep copy of **obj** that is also deeply frozen.
@@ -33,7 +33,7 @@ function safeCopy<T>(arr: T[]): readonly Readonly<T>[];
  */
 function safeCopy<T>(obj: T): Readonly<T>;
 
-function safeCopy<T>(obj: (T[][] | T[] | T)): (readonly (readonly Readonly<T>[])[] | readonly Readonly<T>[] | Readonly<T>) {
+function safeCopy<T>(obj: T): Readonly<T> {
 	return deepFreeze(deepCopy(obj));
 }
 
