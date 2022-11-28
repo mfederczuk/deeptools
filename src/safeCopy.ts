@@ -7,32 +7,29 @@ import { deepCopy } from "./deepCopy";
 import { deepFreeze } from "./deepFreeze";
 
 /**
- * Creates a safe copy of **arr** by creating a deep frozen copy of it.
+ * Creates a deep copy of **arr** that is also deeply frozen.
  *
- * @param arr
- *        The array to create a safe copy of.
+ * @param arr The 2-dimensional array to create a deeply frozen copy of.
  *
- * @returns A safe copy of **arr**.
+ * @returns A deeply frozen copy of **arr**.
  */
 function safeCopy<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
 
 /**
- * Creates a safe copy of **arr** by creating a deep frozen copy of it.
+ * Creates a deep copy of **arr** that is also deeply frozen.
  *
- * @param arr
- *        The array to create a safe copy of.
+ * @param arr The 1-dimensional array to create a deeply frozen copy of.
  *
- * @returns A safe copy of **arr**.
+ * @returns A deeply frozen copy of **arr**.
  */
 function safeCopy<T>(arr: T[]): readonly Readonly<T>[];
 
 /**
- * Creates a safe copy of **obj** by creating a deep frozen copy of it.
+ * Creates a deep copy of **obj** that is also deeply frozen.
  *
- * @param obj
- *        The object to create a safe copy of.
+ * @param obj The object to create a deeply frozen copy of.
  *
- * @returns A safe copy of **obj**.
+ * @returns A deeply frozen copy of **obj**.
  */
 function safeCopy<T>(obj: T): Readonly<T>;
 

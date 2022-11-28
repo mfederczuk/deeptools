@@ -6,8 +6,7 @@
 /**
  * Creates a deep copy of **obj**.
  *
- * @param obj
- *        The object to create a deep copy of.
+ * @param obj The object to create a deep copy of.
  *
  * @returns A deep copy of **obj**.
  */

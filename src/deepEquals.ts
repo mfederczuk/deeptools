@@ -6,17 +6,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 /**
- * Checks if **obj1** and **obj2** are equal by recursing through their
- * properties.
+ * Checks if **obj1** and **obj2** are equal by recursing through their properties.
  *
- * @param obj1
- *        The first object to compare.
+ * @param obj1 The first object to compare.
+ * @param obj2 The second object to compare.
  *
- * @param obj2
- *        The second object to compare.
- *
- * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if
- *          otherwise.
+ * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if otherwise.
  */
 export function deepEquals(obj1: unknown, obj2: unknown): boolean {
 	if(typeof(obj1) !== "object" || obj1 === null ||

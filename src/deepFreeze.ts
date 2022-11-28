@@ -4,21 +4,18 @@
  */
 
 /**
- * Recursively freezes **arr**, all of **arr**'s items and all items of
- *  **arr**'s items.
+ * Recursively freezes **arr** and all of its items & other properties.
  *
- * @param arr
- *        The array to freeze.
+ * @param arr The 2-dimensional array to freeze.
  *
  * @returns **arr**, deeply frozen.
  */
 function deepFreeze<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
 
 /**
- * Recursively freezes **arr** and all of its items.
+ * Recursively freezes **arr** and all of its items & other properties.
  *
- * @param arr
- *        The array to freeze.
+ * @param arr The 1-dimensional array to freeze.
  *
  * @returns **arr**, deeply frozen.
  */
@@ -27,8 +24,7 @@ function deepFreeze<T>(arr: T[]): readonly Readonly<T>[];
 /**
  * Recursively freezes **obj** and all of its properties.
  *
- * @param obj
- *        The object to freeze.
+ * @param obj The object to freeze.
  *
  * @returns **obj**, deeply frozen.
  */
