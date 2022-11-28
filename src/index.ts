@@ -6,4 +6,5 @@
 export * from "./deepCopy";
 export * from "./deepEquals";
 export * from "./deepFreeze";
+export * from "./deepWalk";
 export * from "./safeCopy";

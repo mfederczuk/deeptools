@@ -15,6 +15,7 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 ### Added ###
 
+* New `deepWalk` function
 * Documentation comments are emitted into the type declaration files
 * `deepCopy` & `deepFreeze` function declaration overload for 3-dimensional arrays
 
