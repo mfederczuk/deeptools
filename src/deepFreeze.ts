@@ -3,6 +3,36 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { GenericKey } from "./types";
+import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
+
+const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>) => {
+	const keys: GenericKey[] = getPropertyKeys(prototype)
+		.filter((key: GenericKey) => (key !== "constructor"));
+
+	for(const key of keys) {
+		deepFreeze((prototype[key]));
+	}
+};
+
+deepFreeze(deepFreezePrototypeExcludingConstructor);
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
+	const keys: GenericKey[] = getPropertyKeys(func)
+		.filter((key: GenericKey) => (key !== "prototype"));
+
+	deepFreezePrototypeExcludingConstructor(func.prototype);
+
+	for(const key of keys) {
+		deepFreeze((func as Record<GenericKey, unknown>)[key]);
+	}
+
+	return Object.freeze(func);
+};
+
+deepFreeze(deepFreezeFunctionWithPrototype);
+
 /**
  * Recursively freezes **arr** and all of its items & other properties.
  *
@@ -40,11 +70,24 @@ function deepFreeze<T>(arr: readonly T[]): readonly Readonly<T>[];
 function deepFreeze<T>(obj: T): Readonly<T>;
 
 function deepFreeze<T>(obj: T): Readonly<T> {
-	if(typeof(obj) !== "object" || obj === null) return obj;
+	if(!(canValueHaveProperties(obj))) {
+		return obj;
+	}
 
-	(Object.getOwnPropertyNames(obj) as ((keyof T[][] & keyof T[] & keyof T)[])).forEach((prop) => {
-		deepFreeze(obj[prop]);
-	});
+	if((typeof obj === "function") && ("prototype" in obj)) {
+		return deepFreezeFunctionWithPrototype(obj);
+	}
+
+	for(const key of getPropertyKeys(obj)) {
+		deepFreeze((obj as Record<GenericKey, unknown>)[key]);
+	}
+
+	if((obj instanceof Map) || (obj instanceof Set)) {
+		for(const [key, value] of obj.entries()) {
+			deepFreeze(value);
+			deepFreeze(key);
+		}
+	}
 
 	return Object.freeze(obj);
 }

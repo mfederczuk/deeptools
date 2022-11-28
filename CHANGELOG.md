@@ -19,6 +19,11 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 * Documentation comments are emitted into the type declaration files
 * `deepCopy` & `deepFreeze` function declaration overload for 3-dimensional arrays
 
+### Changed ###
+
+* `deepFreeze` operates on function objects and also freezes properties with symbol keys
+* `safeCopy` freezes properties with symbol keys
+
 ### Security ###
 
 * Updated dependencies
