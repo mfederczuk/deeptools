@@ -21,8 +21,33 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 ### Changed ###
 
-* `deepFreeze` operates on function objects and also freezes properties with symbol keys
-* `safeCopy` freezes properties with symbol keys
+* `deepCopy`, `deepFreeze` & `safeCopy` operate on function objects and also freeze and/or copy properties with
+  symbol keys
+* `deepCopy` & `safeCopy` also copy property configurations
+* `deepCopy` & `safeCopy` properly copy the following object types:
+  * `RegExp`
+  * `Date`
+  * `Map`
+  * `Set`
+  * `Int8Array`
+  * `Uint8Array`
+  * `Uint8ClampedArray`
+  * `Int16Array`
+  * `Uint16Array`
+  * `Int32Array`
+  * `Uint32Array`
+  * `Float32Array`
+  * `Float64Array`
+  * `BigInt64Array`
+  * `BigUint64Array`
+  * `ArrayBuffer`
+* `deepCopy` & `safeCopy` throw a `TypeError` when attempting to copy any of the following types:
+  * function
+  * `WeakMap`
+  * `WeakSet`
+  * `SharedArrayBuffer`
+  * `DataView`
+  * `Promise`
 
 ### Security ###
 
