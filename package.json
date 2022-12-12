@@ -50,6 +50,7 @@
 		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze",
 
 		"update-dependencies": "rm -rf types/ out/ node_modules/ package-lock.json yarn.lock && npm update --save && npx --package=npm-check-updates ncu --upgrade && npm install",
+		"version": "./update-version-from-package",
 
 		"prepare": "npm run clean && npm run test && npm run build && npm run uglify"
 	},
