@@ -81,14 +81,14 @@ try {
 	foo.b[1].xyz = "dsa";
 } catch(err) {}
 
-assert(foo.a.x.yee  === 16);
-assert(foo.a.x.haw  === null);
-assert(foo.a.y[0]   === "123");
-assert(foo.a.y[1]   === 32);
-assert(foo.a.y[2]   === true);
-assert(foo.a.z      === 64);
-assert(foo.b[0][2]  === 0);
-assert(foo.b[0][3]  === "");
-assert(foo.b[0][4]  === false);
-assert(foo.b[1].abc === 123);
-assert(foo.b[1].xyz === "asd");
+assert.strictEqual(foo.a.x.yee,  16);
+assert.strictEqual(foo.a.x.haw,  null);
+assert.strictEqual(foo.a.y[0],   "123");
+assert.strictEqual(foo.a.y[1],   32);
+assert.strictEqual(foo.a.y[2],   true);
+assert.strictEqual(foo.a.z,      64);
+assert.strictEqual(foo.b[0][2],  0);
+assert.strictEqual(foo.b[0][3],  "");
+assert.strictEqual(foo.b[0][4],  false);
+assert.strictEqual(foo.b[1].abc, 123);
+assert.strictEqual(foo.b[1].xyz, "asd");
