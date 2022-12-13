@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { deepFreeze } from "./deepFreeze";
 import { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
@@ -24,7 +25,7 @@ export type DeepEqualsOptions = {
  *
  * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if otherwise.
  */
-export function deepEquals(
+function deepEquals(
 	obj1: unknown,
 	obj2: unknown,
 	options?: Readonly<DeepEqualsOptions>,
@@ -95,3 +96,7 @@ export function deepEquals(
 
 	return true;
 }
+
+deepFreeze(deepEquals);
+
+export { deepEquals };

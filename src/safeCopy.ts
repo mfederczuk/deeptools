@@ -46,4 +46,6 @@ function safeCopy<T>(obj: T): Readonly<T> {
 	return deepFreeze(deepCopy(obj));
 }
 
+deepFreeze(safeCopy);
+
 export { safeCopy };

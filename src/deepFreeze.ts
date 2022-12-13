@@ -92,4 +92,6 @@ function deepFreeze<T>(obj: T): Readonly<T> {
 	return Object.freeze(obj);
 }
 
+deepFreeze(deepFreeze);
+
 export { deepFreeze };

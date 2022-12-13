@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { deepFreeze } from "./deepFreeze";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
 const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
@@ -82,6 +83,8 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 	return Object.create(obj);
 };
 
+deepFreeze(initCopy);
+
 /**
  * Creates a deep copy of **obj**.
  *
@@ -89,7 +92,7 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
  *
  * @returns A deep copy of **obj**.
  */
-export function deepCopy<T>(obj: T): T {
+function deepCopy<T>(obj: T): T {
 	if(!(canValueHaveProperties(obj))) {
 		return obj;
 	}
@@ -121,3 +124,7 @@ export function deepCopy<T>(obj: T): T {
 
 	return (copy as T);
 }
+
+deepFreeze(deepCopy);
+
+export { deepCopy };
