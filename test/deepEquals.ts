@@ -6,6 +6,9 @@
 import { deepEquals } from "../src/deepEquals";
 import assert from "assert";
 
+assert(deepEquals(NaN, NaN));
+assert(!deepEquals(NaN, 0));
+
 const foo = {
 	a: {
 		x: {
