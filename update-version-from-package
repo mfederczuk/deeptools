@@ -1,0 +1,123 @@
+#!/bin/bash
+# -*- sh -*-
+# vim: set syntax=sh
+# code: language=shellscript
+
+# Copyright (c) 2022 Michael Federczuk
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# enabling POSIX-compliant behavior for GNU programs
+export POSIXLY_CORRECT=yes POSIX_ME_HARDER=yes
+
+if ! uname -a | grep -Eq 'GNU'; then
+	printf 'This script assumes that you are on a GNU/Linux system, which does not appear to be the case. Continue anyway? [y/N] ' >&2
+	read -r ans
+
+	case "$ans" in
+		(['yY']*)
+			# continue
+			;;
+		(*)
+			echo 'Aborting.' >&2
+			exit 32
+			;;
+	esac
+
+	unset -v ans
+fi
+
+# we either are or just assume that we are on a GNU system, so we don't need these anymore
+unset -v POSIX_ME_HARDER POSIXLY_CORRECT
+
+
+declare argv0
+if [[ ! "$0" =~ ^'/' ]]; then
+	argv0="$0"
+else
+	argv0="$(basename -- "$0" && printf x)"
+	argv0="${argv0%$'\nx'}"
+fi
+readonly argv0
+
+
+if ! command -v jq > '/dev/null'; then
+	printf '%s: jq: program missing\n' "$argv0" >&2
+	exit 27
+fi
+
+if (($# > 0)); then
+	printf '%s: too many arguments: %i\n' $# >&2
+	exit 4
+fi
+
+
+declare root_dir_path
+root_dir_path="$(dirname -- "$0" && printf x)"
+root_dir_path="${root_dir_path%$'\nx'}"
+readonly root_dir_path
+
+readonly package_json_file_path="$root_dir_path/package.json"
+readonly readme_file_path="$root_dir_path/README.md"
+readonly changelog_file_path="$root_dir_path/CHANGELOG.md"
+
+
+declare new_version_name
+new_version_name="$(jq -rM '."version"' "$package_json_file_path")"
+readonly new_version_name
+
+
+readonly integer_pattern='0|[1-9][0-9]*'
+readonly version_name_no_prerelease_pattern="($integer_pattern)\.($integer_pattern)\.($integer_pattern)"
+readonly version_name_pattern="($version_name_no_prerelease_pattern)(-(indev|rc)[0-9]{2})?"
+readonly version_name_shields_io_path_pattern="($version_name_no_prerelease_pattern)(--(indev|rc)[0-9]{2})?"
+
+
+function exec_sed_from_expr_pairs() {
+	local io_file_path
+	io_file_path="$1"
+	readonly io_file_path
+
+	shift 1
+
+	local -a sed_expr_args
+	sed_expr_args=()
+
+	while (($# >= 2)); do
+		sed_expr_args+=(-e s%"$1"%"$2"%)
+		shift 2
+	done
+
+	sed_expr_args+=("$io_file_path")
+
+	sed -Ei "${sed_expr_args[@]}"
+}
+readonly -f exec_sed_from_expr_pairs
+
+
+declare -a sed_expr_pairs
+
+sed_expr_pairs=(
+	"^\[version_shield\]: https://img\.shields\.io/badge/version-($version_name_shields_io_path_pattern)-informational\.svg$"
+	"[version_shield]: https://img.shields.io/badge/version-$new_version_name-informational.svg"
+
+	"^\[release_page\]: https://github\.com/mfederczuk/deeptools/releases/tag/v($version_name_pattern) \"Release v($version_name_pattern)\"$"
+	"[release_page]: https://github.com/mfederczuk/deeptools/releases/tag/v$new_version_name \"Release v$new_version_name\""
+
+	"^\[!\[version: ($version_name_pattern)\]\[version_shield\]\]\[release_page\]$"
+	"[![version: $new_version_name][version_shield]][release_page]"
+)
+exec_sed_from_expr_pairs "$readme_file_path" "${sed_expr_pairs[@]}"
+
+declare rfc3339_localdate
+rfc3339_localdate="$(date +'%Y-%m-%d')"
+readonly rfc3339_localdate
+
+sed_expr_pairs=(
+	'^## Unreleased ##$'
+	"## [v$new_version_name] - $rfc3339_localdate ##\\n\\n[v$new_version_name]: https://github.com/mfederczuk/deeptools/releases/v$new_version_name"
+)
+exec_sed_from_expr_pairs "$changelog_file_path" "${sed_expr_pairs[@]}"

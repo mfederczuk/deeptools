@@ -1,43 +1,51 @@
 /*
- * Copyright (c) 2020 Michael Federczuk
+ * Copyright (c) 2022 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import deepCopy from "./deepCopy";
-import deepFreeze from "./deepFreeze";
+import { deepCopy } from "./deepCopy";
+import { deepFreeze } from "./deepFreeze";
 
 /**
- * Creates a safe copy of **arr** by creating a deep frozen copy of it.
+ * Creates a deep copy of **arr** that is also deeply frozen.
  *
- * @param arr
- *        The array to create a safe copy of.
+ * @param arr The 3-dimensional array to create a deeply frozen copy of.
  *
- * @returns A safe copy of **arr**.
+ * @returns A deeply frozen copy of **arr**.
  */
-function safeCopy<T>(arr: T[][]): readonly (readonly Readonly<T>[])[];
+function safeCopy<T>(arr: readonly (readonly (readonly T[])[])[]): readonly (readonly (readonly Readonly<T>[])[])[];
 
 /**
- * Creates a safe copy of **arr** by creating a deep frozen copy of it.
+ * Creates a deep copy of **arr** that is also deeply frozen.
  *
- * @param arr
- *        The array to create a safe copy of.
+ * @param arr The 2-dimensional array to create a deeply frozen copy of.
  *
- * @returns A safe copy of **arr**.
+ * @returns A deeply frozen copy of **arr**.
  */
-function safeCopy<T>(arr: T[]): readonly Readonly<T>[];
+function safeCopy<T>(arr: readonly (readonly T[])[]): readonly (readonly Readonly<T>[])[];
 
 /**
- * Creates a safe copy of **obj** by creating a deep frozen copy of it.
+ * Creates a deep copy of **arr** that is also deeply frozen.
  *
- * @param obj
- *        The object to create a safe copy of.
+ * @param arr The 1-dimensional array to create a deeply frozen copy of.
  *
- * @returns A safe copy of **obj**.
+ * @returns A deeply frozen copy of **arr**.
+ */
+function safeCopy<T>(arr: readonly T[]): readonly Readonly<T>[];
+
+/**
+ * Creates a deep copy of **obj** that is also deeply frozen.
+ *
+ * @param obj The object to create a deeply frozen copy of.
+ *
+ * @returns A deeply frozen copy of **obj**.
  */
 function safeCopy<T>(obj: T): Readonly<T>;
 
-function safeCopy<T>(obj: (T[][] | T[] | T)): (readonly (readonly Readonly<T>[])[] | readonly Readonly<T>[] | Readonly<T>) {
+function safeCopy<T>(obj: T): Readonly<T> {
 	return deepFreeze(deepCopy(obj));
 }
 
-export default safeCopy;
+deepFreeze(safeCopy);
+
+export { safeCopy };

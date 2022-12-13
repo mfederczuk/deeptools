@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2020 Michael Federczuk
+ * Copyright (c) 2022 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-export { default as deepCopy } from "./deepCopy";
-export { default as deepEquals } from "./deepEquals";
-export { default as deepFreeze } from "./deepFreeze";
-export { default as safeCopy } from "./safeCopy";
+export * from "./deepCopy";
+export * from "./deepEquals";
+export * from "./deepFreeze";
+export * from "./deepWalk";
+export * from "./safeCopy";
