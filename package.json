@@ -43,9 +43,7 @@
 
 		"uglify": "find out -type f -name '*.js' -exec npx --package=uglifyjs -- uglifyjs -o '{}' -- '{}' \\;",
 
-		"test": "npx --package=mocha mocha && npm run testDeepFreeze",
-		"testDeepFreeze": "npx --package=ts-node -- ts-node test/deepFreeze.ts",
-		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze",
+		"test": "npx --package=mocha mocha",
 
 		"update-dependencies": "rm -rf types/ out/ node_modules/ package-lock.json yarn.lock && npm update --save && npx --package=npm-check-updates ncu --upgrade && npm install",
 		"version": "./update-version-from-package",
