@@ -17,6 +17,10 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 * Documentation comments are emitted into the type declaration files
 
+### Security ###
+
+* Updated dependencies
+
 ## [v1.1.1] - 2022-11-24 ##
 
 [v1.1.1]: https://github.com/mfederczuk/deeptools/releases/v1.1.1
