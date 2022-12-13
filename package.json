@@ -49,7 +49,7 @@
 		"testDeepFreeze": "npx --package=ts-node -- ts-node test/deepFreeze.ts",
 		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze",
 
-		"prepare": "npm run clean && npm run test && npm run uglify"
+		"prepare": "npm run clean && npm run test && npm run build && npm run uglify"
 	},
 	"devDependencies": {
 		"@types/node": "^18.11.14",
