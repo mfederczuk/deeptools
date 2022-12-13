@@ -43,9 +43,7 @@
 
 		"uglify": "find out -type f -name '*.js' -exec npx --package=uglifyjs -- uglifyjs -o '{}' -- '{}' \\;",
 
-		"test": "npm run testDeepCopy && npm run testDeepEquals && npm run testDeepFreeze",
-		"testDeepCopy": "npx --package=mocha mocha",
-		"testDeepEquals": "npx --package=ts-node -- ts-node test/deepEquals.ts",
+		"test": "npx --package=mocha mocha && npm run testDeepFreeze",
 		"testDeepFreeze": "npx --package=ts-node -- ts-node test/deepFreeze.ts",
 		"testSafeCopy": "npm run testDeepCopy && npm run testDeepFreeze",
 
