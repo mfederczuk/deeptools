@@ -96,4 +96,38 @@ describe("function deepFreeze()", function() {
 		assert.strictEqual(foo.b[1].abc, 123);
 		assert.strictEqual(foo.b[1].xyz, "asd");
 	});
+
+	it("should work with object getters", function() {
+		const yVal: number = 64;
+
+		const obj = {
+			get x(): never {
+				throw new Error("Don't invoke me, bro");
+			},
+
+			get y(): number {
+				return yVal;
+			},
+		};
+
+		assert.doesNotThrow(() => {
+			deepFreeze(obj);
+		});
+	});
+
+	it("should work with object setters", function() {
+		const obj = {
+			set x(_: unknown) {
+				throw new Error("Don't invoke me either, bro");
+			},
+
+			set y(_: unknown) {
+				void _;
+			}
+		};
+
+		assert.doesNotThrow(() => {
+			deepFreeze(obj);
+		});
+	});
 });
