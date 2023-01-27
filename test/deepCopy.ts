@@ -347,7 +347,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(String(objCopy), String(objInput));
 		assert.notStrictEqual(objCopy, objInput);
 
-		for(const key in objCopy) {
+		for (const key in objCopy) {
 			assert.notStrictEqual(key, fooKey);
 		}
 
@@ -583,7 +583,7 @@ describe("function deepCopy()", function() {
 		assert.throws(
 			() => {
 				// eslint-disable-next-line no-empty-function
-				deepCopy(new Promise(() => { }));
+				deepCopy(new Promise(() => {}));
 			},
 			isTypeError,
 		);

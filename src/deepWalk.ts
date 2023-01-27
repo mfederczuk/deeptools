@@ -33,11 +33,11 @@ const deepWalkInternal = (
 	options: (Readonly<DeepWalkOptions> | undefined),
 	rootObject: unknown,
 ) => {
-	if(!(canValueHaveProperties(obj))) {
+	if (!(canValueHaveProperties(obj))) {
 		return;
 	}
 
-	for(const key of getPropertyKeys(obj)) {
+	for (const key of getPropertyKeys(obj)) {
 		const depth: boolean = (options?.depth === true);
 
 		const newKeyPath: KeyPath = [...keyPath, key];
@@ -48,7 +48,7 @@ const deepWalkInternal = (
 
 		const visit = (() => visitorFunc(newKeyPath, value, obj, descriptor, rootObject));
 
-		if(!depth) {
+		if (!depth) {
 			visit();
 		}
 
@@ -60,7 +60,7 @@ const deepWalkInternal = (
 			rootObject,
 		);
 
-		if(depth) {
+		if (depth) {
 			visit();
 		}
 	}

@@ -10,7 +10,7 @@ const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, u
 	const keys: GenericKey[] = getPropertyKeys(prototype)
 		.filter((key: GenericKey) => (key !== "constructor"));
 
-	for(const key of keys) {
+	for (const key of keys) {
 		deepFreeze((prototype[key]));
 	}
 };
@@ -24,7 +24,7 @@ const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<
 
 	deepFreezePrototypeExcludingConstructor(func.prototype);
 
-	for(const key of keys) {
+	for (const key of keys) {
 		deepFreeze((func as Record<GenericKey, unknown>)[key]);
 	}
 
@@ -70,20 +70,20 @@ function deepFreeze<T>(arr: readonly T[]): readonly Readonly<T>[];
 function deepFreeze<T>(obj: T): Readonly<T>;
 
 function deepFreeze<T>(obj: T): Readonly<T> {
-	if(!(canValueHaveProperties(obj))) {
+	if (!(canValueHaveProperties(obj))) {
 		return obj;
 	}
 
-	if((typeof obj === "function") && ("prototype" in obj)) {
+	if ((typeof obj === "function") && ("prototype" in obj)) {
 		return deepFreezeFunctionWithPrototype(obj);
 	}
 
-	for(const key of getPropertyKeys(obj)) {
+	for (const key of getPropertyKeys(obj)) {
 		deepFreeze((obj as Record<GenericKey, unknown>)[key]);
 	}
 
-	if((obj instanceof Map) || (obj instanceof Set)) {
-		for(const [key, value] of obj.entries()) {
+	if ((obj instanceof Map) || (obj instanceof Set)) {
+		for (const [key, value] of obj.entries()) {
 			deepFreeze(value);
 			deepFreeze(key);
 		}
