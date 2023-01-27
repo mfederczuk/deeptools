@@ -23,13 +23,14 @@
 	],
 	"rules": {
 		"@typescript-eslint/no-empty-function": "off",
-		"@typescript-eslint/no-inferrable-types": "warn",
+		"@typescript-eslint/no-inferrable-types": "off",
 		"@typescript-eslint/no-namespace": "off",
 		"arrow-parens": "warn",
 		"camelcase": "warn",
 		"eqeqeq": "error",
 		"no-empty": "warn",
 		"no-empty-function": "warn",
+		"no-constant-condition": ["warn", { "checkLoops": false }],
 		"no-extra-semi": "warn",
 		"no-inner-declarations": "off",
 		"no-mixed-spaces-and-tabs": "off",
@@ -49,7 +50,7 @@
 			"warn",
 			"always",
 			{
-				"line":{
+				"line": {
 					"markers": ["#region", "#endregion"]
 				}
 			}

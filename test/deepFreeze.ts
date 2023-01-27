@@ -37,52 +37,52 @@ describe("function deepFreeze()", function() {
 					xyz: "asd"
 				}
 			]
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} as any);
 
 		try {
 			foo.a.x.yee = 128;
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.a.x.haw = undefined;
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.a.y[0] = "xyz";
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.a.y[1] = "256";
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.a.y[2] = false;
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.a.z = 512;
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.b[0][2] = true;
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.b[0][3] = "___";
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.b[0][4] = null;
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.b[1].abc = 789;
-		} catch(err) {}
+		} catch (err) {}
 
 		try {
 			foo.b[1].xyz = "dsa";
-		} catch(err) {}
+		} catch (err) {}
 
 		assert.strictEqual(foo.a.x.yee,  16);
 		assert.strictEqual(foo.a.x.haw,  null);

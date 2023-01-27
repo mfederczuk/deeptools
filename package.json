@@ -34,30 +34,30 @@
 		"url": "https://github.com/mfederczuk/deeptools.git"
 	},
 	"scripts": {
-		"lint": "npx --package=eslint -- eslint src test",
+		"lint": "npx --package=eslint -- eslint .",
 
 		"build": "npx --package=typescript -- tsc",
-		"build-watch": "npx --package=typescript -- tsc --watch",
-		"clean": "rm -rf out types",
+		"build-watch": "npm run build -- --watch",
+		"clean": "rm -rf -- types/ out/",
 		"rebuild": "npm run clean && npm run build --",
 
-		"uglify": "find out -type f -name '*.js' -exec npx --package=uglifyjs -- uglifyjs -o '{}' -- '{}' \\;",
+		"postprocess": "find out/ -type f -name '*.js' -exec npx --package=uglify-js -- uglifyjs -o {} -- {} \\;",
 
-		"test": "npx --package=mocha mocha",
+		"test": "npx --package=mocha -- mocha",
 
 		"update-dependencies": "rm -rf types/ out/ node_modules/ package-lock.json yarn.lock && npm update --save && npx --package=npm-check-updates ncu --upgrade && npm install",
 		"version": "./update-version-from-package",
 
-		"prepare": "npm run clean && npm run test && npm run build && npm run uglify"
+		"prepare": "npm run clean && npm run lint && npm run test && npm run build && npm run postprocess"
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.1",
-		"@types/node": "^18.11.14",
-		"@typescript-eslint/eslint-plugin": "^5.46.1",
-		"@typescript-eslint/parser": "^5.46.1",
-		"eslint": "^8.29.0",
+		"@types/node": "^18.11.18",
+		"@typescript-eslint/eslint-plugin": "^5.49.0",
+		"@typescript-eslint/parser": "^5.49.0",
+		"eslint": "^8.32.0",
 		"mocha": "^10.2.0",
-		"npm-check-updates": "^16.5.6",
+		"npm-check-updates": "^16.6.3",
 		"ts-node": "^10.9.1",
 		"typescript": "^4.9.4",
 		"uglify-js": "^3.17.4"

@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2022 Michael Federczuk
+  Copyright (c) 2023 Michael Federczuk
   SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
@@ -45,7 +45,7 @@ Exceptions may apply to some of these rules, see the [`.editorconfig`](.editorco
   [_"Nobody talks about the real reason to use Tabs over Spaces"_ - reddit.com/r/javascript](https://redd.it/c8drjo)
 
   Since this topic is largely based on the programming/development language that is being used, there are some
-  exceptions to the these specific rules.
+  exceptions to these specific rules.
 
   * **Indent with tabs & align with spaces**
 
