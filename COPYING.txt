@@ -3,22 +3,33 @@ A SPDX short-form identifier takes the form of:
 
         SPDX-License-Identifier: <SPDX License Expression>
 
+... and is most of the time placed somewhere at the top of a file.
 Read more about SPDX short-form identifiers here: <https://spdx.dev/ids/>
 
+A copyright notice in the form of:
 
-Files where a SPDX short-form identifier cannot be used or does not fit (for whatever reason) are listed here.
-The left hand side of the colon (':') is the path of the file or directory, and the right hand side of the colon is the
-SPDX license expression that the path is licensed under.
-If the path is a directory, then all files inside the directory are licensed under the expression recursively.
+        Copyright (c) <year> <copyright holder>
 
-        .eslintrc.json: CC0-1.0
-        .github/issue_labels.json: CC0-1.0
-        .github/pull_request_template.md: CC0-1.0
-        .mocharc.json: CC0-1.0
-        package.json: CC0-1.0
+... should also be present near the SPDX short-form identifier if the license is not
+the Creative Commons Zero v1.0 Universal. (as in this case a copyright notice wouldn't make sense)
 
-The SPDX short-form identifier inside distinct files have higher precedence than this list and will override the license
-expression when they differ.
+
+Files in which a SPDX short-form identifier cannot be used or does not fit (for whatever reason) are listed here.
+All of these files are published into the public domain under Creative Commons Zero v1.0 Universal:
+
+        .eslintrc.json
+        .github/issue_labels.json
+        .github/pull_request_template.md
+        .mocharc.json
+        COPYING.txt  (this file)
+        LICENSE.txt
+        package.json
+
+
+All files that don't contain a SPDX short-form identifier, are not listed above and don't contain any other sort of
+copyright and/or license header are verbatim copies from their original sources.
+Copyright belongs to their respectful authors. (this includes all files in the 'LICENSES' directory)
+Correct attribution should be found somewhere in these files.
 
 
 The individual licenses, used in this repository, can be found in the 'LICENSES' directory and are also listed here:
@@ -34,5 +45,3 @@ The individual licenses, used in this repository, can be found in the 'LICENSES'
         Full name:        GNU General Public License v3.0 or later
         Short identifier: GPL-3.0-or-later
         Text file:        LICENSES/GPL-3.0.txt
-
-Each of these files are verbatim copies from their original source. Copyright belongs to their respectful authors.

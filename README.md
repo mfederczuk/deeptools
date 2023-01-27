@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2022 Michael Federczuk
+  Copyright (c) 2023 Michael Federczuk
   SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
@@ -12,7 +12,7 @@
 
 ## About ##
 
-**DeepTools** is a set of utility functions that recursively operate on objects.
+**DeepTools** is a set of JavaScript utility functions that recursively operate on objects.
 
 ## Usage ##
 
@@ -75,7 +75,7 @@ Using **npm**:
 npm i @mfederczuk/deeptools
 ```
 
-Using **Yarn**:
+Using **yarn**:
 
 ```sh
 yarn add @mfederczuk/deeptools
