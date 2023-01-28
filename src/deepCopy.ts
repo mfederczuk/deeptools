@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Michael Federczuk
+ * Copyright (c) 2023 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -82,7 +82,6 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 
 	return Object.create(obj);
 };
-
 deepFreeze(initCopy);
 
 /**
@@ -92,7 +91,7 @@ deepFreeze(initCopy);
  *
  * @returns A deep copy of **obj**.
  */
-function deepCopy<T>(obj: T): T {
+export function deepCopy<T>(obj: T): T {
 	if (!(canValueHaveProperties(obj))) {
 		return obj;
 	}
@@ -124,7 +123,4 @@ function deepCopy<T>(obj: T): T {
 
 	return (copy as T);
 }
-
 deepFreeze(deepCopy);
-
-export { deepCopy };
