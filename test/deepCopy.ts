@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Michael Federczuk
+ * Copyright (c) 2023 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -357,6 +357,46 @@ describe("function deepCopy()", function() {
 			},
 			isTypeError,
 		);
+	});
+
+	it("should work with objects with getters", function() {
+		const fooInput = {
+			get x(): never {
+				throw new Error("Don't invoke me, bro");
+			},
+
+			get y(): number {
+				return 64;
+			},
+		} as const;
+
+		const fooCopy = deepCopy(fooInput);
+
+		assert.throws(() => {
+			fooCopy.x;
+		});
+		assert.strictEqual(fooCopy.y, fooInput.y);
+		assert.notStrictEqual(fooCopy, fooInput);
+	});
+
+	it("should work with objects with setters", function() {
+		const fooInput = {
+			set x(_: number) {
+				throw new Error("Don't invoke me either, bro");
+			},
+
+			set y(_: number) {
+				void _;
+			},
+		} as const;
+
+		const fooCopy = deepCopy(fooInput);
+
+		assert.throws(() => {
+			fooCopy.x = 5;
+		});
+		fooCopy.y = 10;
+		assert.notStrictEqual(fooCopy, fooInput);
 	});
 
 	it("should work with Date objects", function() {
