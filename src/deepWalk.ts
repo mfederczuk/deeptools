@@ -70,6 +70,8 @@ deepFreeze(deepWalkInternal);
 /**
  * Recursively walks through **obj**.
  *
+ * ### This is an experimental function, use with caution. ###
+ *
  * @param obj The object to walk through.
  * @param visitorFunc The visitor callback function to call on every property.
  * @param options Options object to change the behavior of `deepWalk`.
