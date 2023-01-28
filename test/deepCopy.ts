@@ -7,8 +7,6 @@ import assert from "assert";
 import { describe } from "mocha";
 import { deepCopy } from "../src";
 
-const isTypeError = (e: unknown): e is TypeError => (e instanceof TypeError);
-
 describe("function deepCopy()", function() {
 	//#region values w/out properties
 
@@ -49,7 +47,7 @@ describe("function deepCopy()", function() {
 		assert.notStrictEqual(deepCopy(-1), NaN);
 	});
 
-	it(("should work with strings"), function() {
+	it("should work with strings", function() {
 		assert.strictEqual(deepCopy("foobar"), "foobar");
 		assert.strictEqual(deepCopy("yee haw, pardner'"), "yee haw, pardner'");
 		assert.strictEqual(deepCopy(""), "");
@@ -94,6 +92,17 @@ describe("function deepCopy()", function() {
 
 	//#region values w/ properties
 
+	const standardObjectAssert = (copy: object, input: object): (void | never) => {
+		assert.deepStrictEqual(copy, input);
+		assert.strictEqual(String(copy), String(input));
+		assert.notStrictEqual(copy, input);
+	};
+
+	const isTypeError = (e: unknown): e is TypeError => {
+		return (e instanceof TypeError);
+	};
+
+
 	it("should work with simple objects", function() {
 		assert.notStrictEqual(deepCopy({}), {});
 
@@ -110,9 +119,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy.bar, fooInput.bar);
 		assert.strictEqual(fooCopy.yee, fooInput.yee);
 		assert.strictEqual(fooCopy.haw, fooInput.haw);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 		fooCopy.foo = 128;
 		fooCopy.bar = "not baz";
@@ -172,9 +179,7 @@ describe("function deepCopy()", function() {
 		assert.notStrictEqual(barCopy.obj.anotherArr, barInput.obj.anotherArr);
 		assert.notStrictEqual(barCopy.obj, barInput.obj);
 
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 	});
 
 	it("should work with arrays", function() {
@@ -202,9 +207,7 @@ describe("function deepCopy()", function() {
 
 		assert.notStrictEqual(fooCopy[3], fooInput[3]);
 
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -239,9 +242,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual((barCopy as any)["yee"], 55);
 		assert.strictEqual((barCopy as any)["haw"][0], 66);
 
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -256,7 +257,7 @@ describe("function deepCopy()", function() {
 			}
 
 			yeeHaw() {
-				console.log(this.a, this.b);
+				throw new Error("Don't invoke me, bro");
 			}
 		}
 
@@ -274,9 +275,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy.yeeHaw, Foo.prototype.yeeHaw);
 		assert.strictEqual(fooCopy.constructor, Foo);
 
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		class Bar extends Foo {
@@ -308,9 +307,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(Object.getPrototypeOf(Object.getPrototypeOf(barCopy)), Foo.prototype);
 		assert.strictEqual(barCopy.yeeHaw, Foo.prototype.yeeHaw);
 
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 	});
 
 	it("should work with objects with custom configured properties", function() {
@@ -343,9 +340,7 @@ describe("function deepCopy()", function() {
 		assert.notStrictEqual(objCopy[barKey], objCopy[barKey]);
 		assert.strictEqual(objCopy[bazKey], objInput[bazKey]);
 
-		assert.deepStrictEqual(objCopy, objInput);
-		assert.strictEqual(String(objCopy), String(objInput));
-		assert.notStrictEqual(objCopy, objInput);
+		standardObjectAssert(objCopy, objInput);
 
 		for (const key in objCopy) {
 			assert.notStrictEqual(key, fooKey);
@@ -404,9 +399,7 @@ describe("function deepCopy()", function() {
 		const fooCopy = deepCopy(fooInput);
 
 		assert.strictEqual(fooCopy.getTime(), fooInput.getTime());
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -424,9 +417,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual((barCopy as any)["some key"].foo, (barInput as any)["some key"].foo);
 		assert.notStrictEqual((barCopy as any)["some key"], (barInput as any)["some key"]);
 
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -449,18 +440,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy[2], fooInput[2]);
 		assert.strictEqual(fooCopy[3], fooInput[3]);
 		assert.strictEqual(fooCopy[4], fooInput[4]);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		const barInput = new Int8Array([]);
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy.length, barInput.length);
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -474,9 +461,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(bazCopy.length, bazInput.length);
 		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
 		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
-		assert.deepStrictEqual(bazCopy, bazInput);
-		assert.strictEqual(String(bazCopy), String(bazInput));
-		assert.notStrictEqual(bazCopy, bazInput);
+		standardObjectAssert(bazCopy, bazInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -490,18 +475,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy[2], fooInput[2]);
 		assert.strictEqual(fooCopy[3], fooInput[3]);
 		assert.strictEqual(fooCopy[4], fooInput[4]);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		const barInput = new Uint8Array([]);
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy.length, barInput.length);
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -515,9 +496,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(bazCopy.length, bazInput.length);
 		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
 		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
-		assert.deepStrictEqual(bazCopy, bazInput);
-		assert.strictEqual(String(bazCopy), String(bazInput));
-		assert.notStrictEqual(bazCopy, bazInput);
+		standardObjectAssert(bazCopy, bazInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -531,18 +510,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy[2], fooInput[2]);
 		assert.strictEqual(fooCopy[3], fooInput[3]);
 		assert.strictEqual(fooCopy[4], fooInput[4]);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		const barInput = new Uint8Array([]);
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy.length, barInput.length);
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -556,9 +531,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(bazCopy.length, bazInput.length);
 		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
 		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
-		assert.deepStrictEqual(bazCopy, bazInput);
-		assert.strictEqual(String(bazCopy), String(bazInput));
-		assert.notStrictEqual(bazCopy, bazInput);
+		standardObjectAssert(bazCopy, bazInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -573,18 +546,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy[2], fooInput[2]);
 		assert.strictEqual(fooCopy[3], fooInput[3]);
 		assert.strictEqual(fooCopy[4], fooInput[4]);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		const barInput = new Int16Array([]);
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy.length, barInput.length);
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -598,9 +567,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(bazCopy.length, bazInput.length);
 		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
 		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
-		assert.deepStrictEqual(bazCopy, bazInput);
-		assert.strictEqual(String(bazCopy), String(bazInput));
-		assert.notStrictEqual(bazCopy, bazInput);
+		standardObjectAssert(bazCopy, bazInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -614,18 +581,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy[2], fooInput[2]);
 		assert.strictEqual(fooCopy[3], fooInput[3]);
 		assert.strictEqual(fooCopy[4], fooInput[4]);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		const barInput = new Uint16Array([]);
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy.length, barInput.length);
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -639,9 +602,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(bazCopy.length, bazInput.length);
 		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
 		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
-		assert.deepStrictEqual(bazCopy, bazInput);
-		assert.strictEqual(String(bazCopy), String(bazInput));
-		assert.notStrictEqual(bazCopy, bazInput);
+		standardObjectAssert(bazCopy, bazInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -656,18 +617,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy[2], fooInput[2]);
 		assert.strictEqual(fooCopy[3], fooInput[3]);
 		assert.strictEqual(fooCopy[4], fooInput[4]);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		const barInput = new Int32Array([]);
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy.length, barInput.length);
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -681,9 +638,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(bazCopy.length, bazInput.length);
 		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
 		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
-		assert.deepStrictEqual(bazCopy, bazInput);
-		assert.strictEqual(String(bazCopy), String(bazInput));
-		assert.notStrictEqual(bazCopy, bazInput);
+		standardObjectAssert(bazCopy, bazInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
@@ -697,18 +652,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy[2], fooInput[2]);
 		assert.strictEqual(fooCopy[3], fooInput[3]);
 		assert.strictEqual(fooCopy[4], fooInput[4]);
-		assert.deepStrictEqual(fooCopy, fooInput);
-		assert.strictEqual(String(fooCopy), String(fooInput));
-		assert.notStrictEqual(fooCopy, fooInput);
+		standardObjectAssert(fooCopy, fooInput);
 
 
 		const barInput = new Uint32Array([]);
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy.length, barInput.length);
-		assert.deepStrictEqual(barCopy, barInput);
-		assert.strictEqual(String(barCopy), String(barInput));
-		assert.notStrictEqual(barCopy, barInput);
+		standardObjectAssert(barCopy, barInput);
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -722,9 +673,7 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(bazCopy.length, bazInput.length);
 		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
 		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
-		assert.deepStrictEqual(bazCopy, bazInput);
-		assert.strictEqual(String(bazCopy), String(bazInput));
-		assert.notStrictEqual(bazCopy, bazInput);
+		standardObjectAssert(bazCopy, bazInput);
 
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
