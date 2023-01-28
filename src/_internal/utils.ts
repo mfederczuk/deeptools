@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2022 Michael Federczuk
+ * Copyright (c) 2023 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { GenericKey } from "../types";
+import type { GenericKey } from "../types";
 
 export type NonEmptyArray<T> = ([T, ...T[]] | [...T[], T]);
 
