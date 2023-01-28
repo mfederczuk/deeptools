@@ -4,8 +4,14 @@
 	"description": "A set of utility functions that recursively operate on objects",
 	"keywords": [
 		"deep",
+		"clone",
 		"copy",
-		"freeze"
+		"freeze",
+		"deepclone",
+		"deepcopy",
+		"deepequal",
+		"deepequals",
+		"deepfreeze"
 	],
 	"homepage": "https://github.com/mfederczuk/deeptools#readme",
 	"bugs": {
@@ -26,9 +32,6 @@
 	],
 	"main": "out/index.js",
 	"types": "types/index.d.ts",
-	"directories": {
-		"lib": "out"
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mfederczuk/deeptools.git"
