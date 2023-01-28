@@ -5,7 +5,11 @@
 	"keywords": [
 		"deep",
 		"copy",
-		"freeze"
+		"freeze",
+		"deepcopy",
+		"deepequal",
+		"deepequals",
+		"deepfreeze"
 	],
 	"homepage": "https://github.com/mfederczuk/deeptools#readme",
 	"bugs": {
@@ -26,9 +30,6 @@
 	],
 	"main": "out/index.js",
 	"types": "types/index.d.ts",
-	"directories": {
-		"lib": "out"
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mfederczuk/deeptools.git"
