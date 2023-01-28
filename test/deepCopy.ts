@@ -422,7 +422,57 @@ describe("function deepCopy()", function() {
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
-	it("should work with RegExp objects"); // TODO
+	it("should work with RegExp objects", function() {
+		const assertRegExp = (copy: RegExp, input: RegExp) => {
+			assert.strictEqual(copy.source, input.source);
+
+			assert.strictEqual(copy.flags, input.flags);
+
+			assert.strictEqual(copy.dotAll, input.dotAll);
+			assert.strictEqual(copy.global, input.global);
+			assert.strictEqual(copy.ignoreCase, input.ignoreCase);
+			assert.strictEqual(copy.multiline, input.multiline);
+			assert.strictEqual(copy.sticky, input.sticky);
+			assert.strictEqual(copy.unicode, input.unicode);
+
+			assert.strictEqual(copy.lastIndex, input.lastIndex);
+
+
+			standardObjectAssert(copy, input);
+		};
+
+
+		const fooInput = /(pee)+ (poo)+/;
+		assertRegExp(deepCopy(fooInput), fooInput);
+
+
+		const barInput = RegExp("");
+		assertRegExp(deepCopy(barInput), barInput);
+		assertRegExp(deepCopy(fooInput), fooInput);
+
+
+		const bazInput = /foo/gi;
+		assertRegExp(deepCopy(bazInput), bazInput);
+		assertRegExp(deepCopy(fooInput), fooInput);
+
+
+		/* eslint-disable @typescript-eslint/no-explicit-any */
+
+		const key: string = "i don't know man i'm running out of random strings";
+
+		const yeeInput = /foobar/;
+		(yeeInput as any)["haw"] = { [key]: 7 };
+		(yeeInput as any)["yeehaw"] = true;
+
+		const yeeCopy = deepCopy(yeeInput);
+
+		assert.strictEqual((yeeCopy as any)["haw"][key], (yeeInput as any)["haw"][key]);
+		standardObjectAssert((yeeCopy as any)["haw"], (yeeInput as any)["haw"]);
+		assert.strictEqual((yeeCopy as any)["yeehaw"], true);
+		assertRegExp(yeeCopy, yeeInput);
+
+		/* eslint-enable @typescript-eslint/no-explicit-any */
+	});
 
 	it("should work with Map objects"); // TODO
 
