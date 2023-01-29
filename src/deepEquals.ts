@@ -88,7 +88,7 @@ export function deepEquals(
 		}
 
 		if ((obj1PropDescriptor.get !== obj2PropDescriptor.get) ||
-			(obj1PropDescriptor.set !== obj2PropDescriptor.set)) {
+		    (obj1PropDescriptor.set !== obj2PropDescriptor.set)) {
 
 			return false;
 		}
