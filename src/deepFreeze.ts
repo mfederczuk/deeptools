@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2022 Michael Federczuk
+ * Copyright (c) 2023 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { GenericKey } from "./types";
+import type { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
 const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]) => {
@@ -15,7 +15,6 @@ const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly
 		deepFreeze(descriptor.value);
 	}
 };
-
 deepFreeze(deepFreezeKeysOfObject);
 
 const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>) => {
@@ -24,7 +23,6 @@ const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, u
 
 	deepFreezeKeysOfObject(prototype, keys);
 };
-
 deepFreeze(deepFreezePrototypeExcludingConstructor);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -40,8 +38,8 @@ const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<
 
 	return Object.freeze(func);
 };
-
 deepFreeze(deepFreezeFunctionWithPrototype);
+
 
 /**
  * Recursively freezes **arr** and all of its items & other properties.

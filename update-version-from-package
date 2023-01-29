@@ -3,17 +3,43 @@
 # vim: set syntax=sh
 # code: language=shellscript
 
-# Copyright (c) 2022 Michael Federczuk
+# Copyright (c) 2023 Michael Federczuk
 # SPDX-License-Identifier: GPL-3.0-or-later
+
+case "$-" in
+	(*'i'*)
+		if \command test -n "${BASH_VERSION-}"; then
+			# using `eval` here in case a non-Bash shell tries to parse this branch even if the condition is false
+			\command eval "\\command printf '%s: ' \"\${BASH_SOURCE[0]}\" >&2"
+		fi
+
+		\command printf 'script was called interactively\n' >&2
+		return 124
+		;;
+esac
 
 set -o errexit
 set -o nounset
-set -o pipefail
 
 # enabling POSIX-compliant behavior for GNU programs
 export POSIXLY_CORRECT=yes POSIX_ME_HARDER=yes
 
-if ! uname -a | grep -Eq 'GNU'; then
+if [ -z "${BASH_VERSION-}" ]; then
+	if [ "${0#/}" = "$0" ]; then
+		argv0="$0"
+	else
+		argv0="$(basename -- "$0" && printf x)"
+		argv0="${argv0%"$(printf '\nx')"}"
+	fi
+	readonly argv0
+
+	printf '%s: GNU Bash is required for this script\n' "$argv0" >&2
+	exit 1
+fi
+
+set -o pipefail
+
+if ! { uname -a | grep -Eq 'GNU'; }; then
 	printf 'This script assumes that you are on a GNU/Linux system, which does not appear to be the case. Continue anyway? [y/N] ' >&2
 	read -r ans
 
@@ -22,7 +48,7 @@ if ! uname -a | grep -Eq 'GNU'; then
 			# continue
 			;;
 		(*)
-			echo 'Aborting.' >&2
+			printf 'Aborting.\n' >&2
 			exit 32
 			;;
 	esac
@@ -50,24 +76,28 @@ if ! command -v jq > '/dev/null'; then
 fi
 
 if (($# > 0)); then
-	printf '%s: too many arguments: %i\n' $# >&2
+	printf '%s: too many arguments: %i\n' "$argv0" $# >&2
 	exit 4
 fi
 
 
-declare root_dir_path
-root_dir_path="$(dirname -- "$0" && printf x)"
-root_dir_path="${root_dir_path%$'\nx'}"
-readonly root_dir_path
+declare root_dir_pathname
+root_dir_pathname="$(dirname -- "$0" && printf x)"
+root_dir_pathname="${root_dir_pathname%$'\nx'}"
+readonly root_dir_pathname
 
-readonly package_json_file_path="$root_dir_path/package.json"
-readonly readme_file_path="$root_dir_path/README.md"
-readonly changelog_file_path="$root_dir_path/CHANGELOG.md"
+readonly package_json_file_pathname="$root_dir_pathname/package.json"
+readonly readme_file_pathname="$root_dir_pathname/README.md"
+readonly changelog_file_pathname="$root_dir_pathname/CHANGELOG.md"
 
 
 declare new_version_name
-new_version_name="$(jq -rM '."version"' "$package_json_file_path")"
+new_version_name="$(jq -rM '."version"' "$package_json_file_pathname")"
 readonly new_version_name
+
+declare new_version_name_shields_io
+new_version_name_shields_io="${new_version_name//'-'/'--'}"
+readonly new_version_name_shields_io
 
 
 readonly integer_pattern='0|[1-9][0-9]*'
@@ -76,10 +106,35 @@ readonly version_name_pattern="($version_name_no_prerelease_pattern)(-(indev|rc)
 readonly version_name_shields_io_path_pattern="($version_name_no_prerelease_pattern)(--(indev|rc)[0-9]{2})?"
 
 
+declare rfc3339_localdate
+rfc3339_localdate="$(date +'%Y-%m-%d')"
+readonly rfc3339_localdate
+
+declare -a readme_file_sed_expr_pairs
+readme_file_sed_expr_pairs=(
+	"^\[version_shield\]: https://img\.shields\.io/badge/version-($version_name_shields_io_path_pattern)-informational\.svg$"
+	"[version_shield]: https://img.shields.io/badge/version-$new_version_name_shields_io-informational.svg"
+
+	"^\[release_page\]: https://github\.com/mfederczuk/deeptools/releases/tag/v($version_name_pattern) \"Release v($version_name_pattern)\"$"
+	"[release_page]: https://github.com/mfederczuk/deeptools/releases/tag/v$new_version_name \"Release v$new_version_name\""
+
+	"^\[!\[version: ($version_name_pattern)\]\[version_shield\]\]\[release_page\]$"
+	"[![version: $new_version_name][version_shield]][release_page]"
+)
+readonly readme_file_sed_expr_pairs
+
+declare -a changelog_file_sed_expr_pairs
+changelog_file_sed_expr_pairs=(
+	'^## Unreleased ##$'
+	"## [v$new_version_name] - $rfc3339_localdate ##\\n\\n[v$new_version_name]: https://github.com/mfederczuk/deeptools/releases/v$new_version_name"
+)
+readonly changelog_file_sed_expr_pairs
+
+
 function exec_sed_from_expr_pairs() {
-	local io_file_path
-	io_file_path="$1"
-	readonly io_file_path
+	local io_file_pathname
+	io_file_pathname="$1"
+	readonly io_file_pathname
 
 	shift 1
 
@@ -91,33 +146,12 @@ function exec_sed_from_expr_pairs() {
 		shift 2
 	done
 
-	sed_expr_args+=("$io_file_path")
+	sed_expr_args+=("$io_file_pathname")
 
 	sed -Ei "${sed_expr_args[@]}"
 }
 readonly -f exec_sed_from_expr_pairs
 
 
-declare -a sed_expr_pairs
-
-sed_expr_pairs=(
-	"^\[version_shield\]: https://img\.shields\.io/badge/version-($version_name_shields_io_path_pattern)-informational\.svg$"
-	"[version_shield]: https://img.shields.io/badge/version-$new_version_name-informational.svg"
-
-	"^\[release_page\]: https://github\.com/mfederczuk/deeptools/releases/tag/v($version_name_pattern) \"Release v($version_name_pattern)\"$"
-	"[release_page]: https://github.com/mfederczuk/deeptools/releases/tag/v$new_version_name \"Release v$new_version_name\""
-
-	"^\[!\[version: ($version_name_pattern)\]\[version_shield\]\]\[release_page\]$"
-	"[![version: $new_version_name][version_shield]][release_page]"
-)
-exec_sed_from_expr_pairs "$readme_file_path" "${sed_expr_pairs[@]}"
-
-declare rfc3339_localdate
-rfc3339_localdate="$(date +'%Y-%m-%d')"
-readonly rfc3339_localdate
-
-sed_expr_pairs=(
-	'^## Unreleased ##$'
-	"## [v$new_version_name] - $rfc3339_localdate ##\\n\\n[v$new_version_name]: https://github.com/mfederczuk/deeptools/releases/v$new_version_name"
-)
-exec_sed_from_expr_pairs "$changelog_file_path" "${sed_expr_pairs[@]}"
+exec_sed_from_expr_pairs "$readme_file_pathname"    "${readme_file_sed_expr_pairs[@]}"
+exec_sed_from_expr_pairs "$changelog_file_pathname" "${changelog_file_sed_expr_pairs[@]}"

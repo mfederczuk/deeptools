@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2022 Michael Federczuk
+ * Copyright (c) 2023 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { deepFreeze } from "./deepFreeze";
-import { GenericKey } from "./types";
+import type { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
 export type DeepEqualsOptions = {
@@ -25,7 +25,7 @@ export type DeepEqualsOptions = {
  *
  * @returns `true` if **obj1** and **obj2** are deeply equal, `false` if otherwise.
  */
-function deepEquals(
+export function deepEquals(
 	obj1: unknown,
 	obj2: unknown,
 	options?: Readonly<DeepEqualsOptions>,
@@ -88,7 +88,7 @@ function deepEquals(
 		}
 
 		if ((obj1PropDescriptor.get !== obj2PropDescriptor.get) ||
-			(obj1PropDescriptor.set !== obj2PropDescriptor.set)) {
+		    (obj1PropDescriptor.set !== obj2PropDescriptor.set)) {
 
 			return false;
 		}
@@ -98,5 +98,3 @@ function deepEquals(
 }
 
 deepFreeze(deepEquals);
-
-export { deepEquals };

@@ -4,8 +4,14 @@
 	"description": "A set of utility functions that recursively operate on objects",
 	"keywords": [
 		"deep",
+		"clone",
 		"copy",
-		"freeze"
+		"freeze",
+		"deepclone",
+		"deepcopy",
+		"deepequal",
+		"deepequals",
+		"deepfreeze"
 	],
 	"homepage": "https://github.com/mfederczuk/deeptools#readme",
 	"bugs": {
@@ -26,9 +32,6 @@
 	],
 	"main": "out/index.js",
 	"types": "types/index.d.ts",
-	"directories": {
-		"lib": "out"
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mfederczuk/deeptools.git"
@@ -55,7 +58,7 @@
 		"@types/node": "^18.11.18",
 		"@typescript-eslint/eslint-plugin": "^5.49.0",
 		"@typescript-eslint/parser": "^5.49.0",
-		"eslint": "^8.32.0",
+		"eslint": "^8.33.0",
 		"mocha": "^10.2.0",
 		"npm-check-updates": "^16.6.3",
 		"ts-node": "^10.9.1",

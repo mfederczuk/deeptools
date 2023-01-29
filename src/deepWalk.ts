@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2022 Michael Federczuk
+ * Copyright (c) 2023 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { deepFreeze } from "./deepFreeze";
-import { GenericKey } from "./types";
+import type { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys, NonEmptyArray } from "./_internal/utils";
 
 export type KeyPath = NonEmptyArray<GenericKey>;
@@ -65,24 +65,22 @@ const deepWalkInternal = (
 		}
 	}
 };
-
 deepFreeze(deepWalkInternal);
 
 /**
  * Recursively walks through **obj**.
  *
+ * ### This is an experimental function, use with caution. ###
+ *
  * @param obj The object to walk through.
  * @param visitorFunc The visitor callback function to call on every property.
  * @param options Options object to change the behavior of `deepWalk`.
  */
-function deepWalk(
+export function deepWalk(
 	obj: unknown,
 	visitorFunc: PropertyVisitorFunc,
 	options?: Readonly<DeepWalkOptions>,
 ) {
 	return deepWalkInternal([], obj, visitorFunc, options, obj);
 }
-
 deepFreeze(deepWalk);
-
-export { deepWalk };
