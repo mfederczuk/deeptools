@@ -13,6 +13,8 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 ## Unreleased ##
 
+Minor internal improvements.
+
 ### Security ###
 
 * Update dependencies
