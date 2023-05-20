@@ -82,7 +82,6 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 
 	return Object.create(obj);
 };
-deepFreeze(initCopy);
 
 /**
  * Creates a deep copy of **obj**.
