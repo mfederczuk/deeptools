@@ -10,9 +10,9 @@ const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly
 	for (const key of keys) {
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 
-		deepFreeze(descriptor.get);
-		deepFreeze(descriptor.set);
-		deepFreeze(descriptor.value);
+		deepFreezeInternal(descriptor.get);
+		deepFreezeInternal(descriptor.set);
+		deepFreezeInternal(descriptor.value);
 	}
 };
 
@@ -31,10 +31,34 @@ const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<
 	deepFreezePrototypeExcludingConstructor(func.prototype);
 
 	for (const key of keys) {
-		deepFreeze((func as Record<GenericKey, unknown>)[key]);
+		deepFreezeInternal((func as Record<GenericKey, unknown>)[key]);
 	}
 
 	return Object.freeze(func);
+};
+
+const deepFreezeInternal = <T>(obj: T): Readonly<T> => {
+	if (!(canValueHaveProperties(obj))) {
+		return obj;
+	}
+
+	if ((typeof obj === "function") && ("prototype" in obj)) {
+		return deepFreezeFunctionWithPrototype(obj);
+	}
+
+	deepFreezeKeysOfObject(
+		(obj as Record<GenericKey, unknown>),
+		getPropertyKeys(obj),
+	);
+
+	if ((obj instanceof Map) || (obj instanceof Set)) {
+		for (const [key, value] of obj.entries()) {
+			deepFreezeInternal(value);
+			deepFreezeInternal(key);
+		}
+	}
+
+	return Object.freeze(obj);
 };
 
 
@@ -75,27 +99,7 @@ function deepFreeze<T>(arr: readonly T[]): readonly Readonly<T>[];
 function deepFreeze<T>(obj: T): Readonly<T>;
 
 function deepFreeze<T>(obj: T): Readonly<T> {
-	if (!(canValueHaveProperties(obj))) {
-		return obj;
-	}
-
-	if ((typeof obj === "function") && ("prototype" in obj)) {
-		return deepFreezeFunctionWithPrototype(obj);
-	}
-
-	deepFreezeKeysOfObject(
-		(obj as Record<GenericKey, unknown>),
-		getPropertyKeys(obj),
-	);
-
-	if ((obj instanceof Map) || (obj instanceof Set)) {
-		for (const [key, value] of obj.entries()) {
-			deepFreeze(value);
-			deepFreeze(key);
-		}
-	}
-
-	return Object.freeze(obj);
+	return deepFreezeInternal(obj);
 }
 
 deepFreeze(deepFreeze);
