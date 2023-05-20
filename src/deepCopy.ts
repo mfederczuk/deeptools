@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -82,7 +82,6 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 
 	return Object.create(obj);
 };
-deepFreeze(initCopy);
 
 /**
  * Creates a deep copy of **obj**.

@@ -64,7 +64,6 @@ const deepWalkInternal = (
 		}
 	}
 };
-deepFreeze(deepWalkInternal);
 
 /**
  * Recursively walks through **obj**.

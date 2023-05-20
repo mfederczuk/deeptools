@@ -14,7 +14,6 @@ const deepFreezeKeysOfObject = (obj: Record<PropertyKey, unknown>, keys: readonl
 		deepFreeze(descriptor.value);
 	}
 };
-deepFreeze(deepFreezeKeysOfObject);
 
 const deepFreezePrototypeExcludingConstructor = (prototype: Record<PropertyKey, unknown>) => {
 	const keys: PropertyKey[] = getPropertyKeys(prototype)
@@ -22,7 +21,6 @@ const deepFreezePrototypeExcludingConstructor = (prototype: Record<PropertyKey, 
 
 	deepFreezeKeysOfObject(prototype, keys);
 };
-deepFreeze(deepFreezePrototypeExcludingConstructor);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
@@ -37,7 +35,6 @@ const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<
 
 	return Object.freeze(func);
 };
-deepFreeze(deepFreezeFunctionWithPrototype);
 
 
 /**
