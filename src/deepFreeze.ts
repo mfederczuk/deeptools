@@ -6,7 +6,7 @@
 import type { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
-const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]) => {
+const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]): void => {
 	for (const key of keys) {
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 
@@ -16,7 +16,7 @@ const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly
 	}
 };
 
-const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>) => {
+const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>): void => {
 	const keys: GenericKey[] = getPropertyKeys(prototype)
 		.filter((key: GenericKey) => (key !== "constructor"));
 

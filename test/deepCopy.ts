@@ -256,7 +256,7 @@ describe("function deepCopy()", function() {
 				// eslint-disable-next-line no-empty-function
 			}
 
-			yeeHaw() {
+			yeeHaw(): never {
 				throw new Error("Don't invoke me, bro");
 			}
 		}
@@ -423,7 +423,7 @@ describe("function deepCopy()", function() {
 	});
 
 	it("should work with RegExp objects", function() {
-		const assertRegExp = (copy: RegExp, input: RegExp) => {
+		const assertRegExp = (copy: RegExp, input: RegExp): (void | never) => {
 			assert.strictEqual(copy.source, input.source);
 
 			assert.strictEqual(copy.flags, input.flags);

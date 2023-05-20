@@ -32,7 +32,7 @@ const deepWalkInternal = (
 	visitorFunc: PropertyVisitorFunc,
 	options: (Readonly<DeepWalkOptions> | undefined),
 	rootObject: unknown,
-) => {
+): void => {
 	if (!(canValueHaveProperties(obj))) {
 		return;
 	}
@@ -46,7 +46,7 @@ const deepWalkInternal = (
 
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 
-		const visit = (() => visitorFunc(newKeyPath, value, obj, descriptor, rootObject));
+		const visit = ((): void => visitorFunc(newKeyPath, value, obj, descriptor, rootObject));
 
 		if (!depth) {
 			visit();
@@ -79,7 +79,7 @@ export function deepWalk(
 	obj: unknown,
 	visitorFunc: PropertyVisitorFunc,
 	options?: Readonly<DeepWalkOptions>,
-) {
+): void {
 	return deepWalkInternal([], obj, visitorFunc, options, obj);
 }
 deepFreeze(deepWalk);
