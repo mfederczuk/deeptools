@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
+import { getPropertyKeys, isNotPrimitive } from "./_internal/utils";
 
 const deepFreezeKeysOfObject = (obj: Record<PropertyKey, unknown>, keys: readonly PropertyKey[]) => {
 	for (const key of keys) {
@@ -74,7 +74,7 @@ function deepFreeze<T>(arr: readonly T[]): readonly Readonly<T>[];
 function deepFreeze<T>(obj: T): Readonly<T>;
 
 function deepFreeze<T>(obj: T): Readonly<T> {
-	if (!(canValueHaveProperties(obj))) {
+	if (!(isNotPrimitive(obj))) {
 		return obj;
 	}
 

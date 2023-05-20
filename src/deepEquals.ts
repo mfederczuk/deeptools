@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
+import { getPropertyKeys, isNotPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
 
 export type DeepEqualsOptions = {
@@ -29,7 +29,7 @@ export function deepEquals(
 	obj2: unknown,
 	options?: Readonly<DeepEqualsOptions>,
 ): boolean {
-	if (!(canValueHaveProperties(obj1)) || !(canValueHaveProperties(obj2))) {
+	if (!(isNotPrimitive(obj1)) || !(isNotPrimitive(obj2))) {
 		if (Number.isNaN(obj1) && Number.isNaN(obj2)) {
 			return true;
 		}

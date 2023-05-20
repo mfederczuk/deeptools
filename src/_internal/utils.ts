@@ -6,7 +6,7 @@
 export type NonEmptyArray<T> = ([T, ...T[]] | [...T[], T]);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function canValueHaveProperties(value: unknown): value is NonNullable<(object | Function)> {
+export function isNotPrimitive(value: unknown): value is NonNullable<object | Function> {
 	return (((typeof value === "object") && (value !== null)) ||
 	        (typeof value === "function"));
 }
