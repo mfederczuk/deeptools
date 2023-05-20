@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { getPropertyKeys, isNonPrimitive } from "./_internal/utils";
 import type { GenericKey } from "./types";
-import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
 const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]): void => {
 	for (const key of keys) {
@@ -38,7 +38,7 @@ const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<
 };
 
 const deepFreezeInternal = <T>(obj: T): Readonly<T> => {
-	if (!(canValueHaveProperties(obj))) {
+	if (!(isNonPrimitive(obj))) {
 		return obj;
 	}
 

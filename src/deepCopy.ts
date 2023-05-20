@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { getPropertyKeys, isNonPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
-import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
 const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 	// <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects>
@@ -91,7 +91,7 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
  * @returns A deep copy of **obj**.
  */
 export function deepCopy<T>(obj: T): T {
-	if (!(canValueHaveProperties(obj))) {
+	if (!(isNonPrimitive(obj))) {
 		return obj;
 	}
 

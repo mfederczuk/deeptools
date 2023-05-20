@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { NonEmptyArray, getPropertyKeys, isNonPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
 import type { GenericKey } from "./types";
-import { canValueHaveProperties, getPropertyKeys, NonEmptyArray } from "./_internal/utils";
 
 export type KeyPath = NonEmptyArray<GenericKey>;
 
@@ -33,7 +33,7 @@ const deepWalkInternal = (
 	options: (Readonly<DeepWalkOptions> | undefined),
 	rootObject: unknown,
 ): void => {
-	if (!(canValueHaveProperties(obj))) {
+	if (!(isNonPrimitive(obj))) {
 		return;
 	}
 
