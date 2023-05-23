@@ -3,102 +3,144 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import type { GenericKey } from "./types";
-import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
+import { NullWeakSet } from "./_internal/NullWeakSet";
+import { NonPrimitive, getPropertyKeys, isNonPrimitive } from "./_internal/utils";
 
-const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]) => {
+const deepFreezeKeysOfObject = <T extends NonPrimitive>(
+	obj: T,
+	keys: readonly (keyof T)[],
+	frozenObjects: WeakSet<NonPrimitive>,
+): void => {
 	for (const key of keys) {
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 
-		deepFreeze(descriptor.get);
-		deepFreeze(descriptor.set);
-		deepFreeze(descriptor.value);
+		deepFreezeInternal(descriptor.get, frozenObjects);
+		deepFreezeInternal(descriptor.set, frozenObjects);
+		deepFreezeInternal(descriptor.value, frozenObjects);
 	}
 };
-deepFreeze(deepFreezeKeysOfObject);
 
-const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>) => {
-	const keys: GenericKey[] = getPropertyKeys(prototype)
-		.filter((key: GenericKey) => (key !== "constructor"));
+const deepFreezePrototypeExcludingConstructor = <P extends NonPrimitive>(
+	prototype: P,
+	frozenObjects: WeakSet<NonPrimitive>,
+): void => {
+	const keys: (keyof P)[] = getPropertyKeys<P>(prototype)
+		.filter((key: (keyof P)) => (key !== "constructor"));
 
-	deepFreezeKeysOfObject(prototype, keys);
+	deepFreezeKeysOfObject(prototype, keys, frozenObjects);
 };
-deepFreeze(deepFreezePrototypeExcludingConstructor);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
-	const keys: GenericKey[] = getPropertyKeys(func)
-		.filter((key: GenericKey) => (key !== "prototype"));
+const deepFreezeFunctionWithPrototype = <F extends Function>(
+	func: F,
+	frozenObjects: WeakSet<NonPrimitive>,
+): Readonly<F> => {
+	const keys: (keyof F)[] = getPropertyKeys<F>(func)
+		.filter((key: (keyof F)) => (key !== "prototype"));
 
-	deepFreezePrototypeExcludingConstructor(func.prototype);
-
-	for (const key of keys) {
-		deepFreeze((func as Record<GenericKey, unknown>)[key]);
-	}
+	deepFreezePrototypeExcludingConstructor(func.prototype, frozenObjects);
+	deepFreezeKeysOfObject(func, keys, frozenObjects);
 
 	return Object.freeze(func);
 };
-deepFreeze(deepFreezeFunctionWithPrototype);
 
+const deepFreezeInternal = <T>(obj: T, frozenObjects: WeakSet<NonPrimitive>): Readonly<T> => {
+	if (!(isNonPrimitive(obj))) {
+		return obj;
+	}
+
+	if (frozenObjects.has(obj)) {
+		return obj;
+	}
+	frozenObjects.add(obj);
+
+	if ((typeof obj === "function") && ("prototype" in obj)) {
+		return deepFreezeFunctionWithPrototype(obj, frozenObjects);
+	}
+
+	deepFreezeKeysOfObject(
+		obj,
+		getPropertyKeys<T & object>(obj),
+		frozenObjects,
+	);
+
+	if ((obj instanceof Map) || (obj instanceof Set)) {
+		for (const [key, value] of obj.entries()) {
+			deepFreezeInternal(value, frozenObjects);
+			deepFreezeInternal(key, frozenObjects);
+		}
+	}
+
+	return Object.freeze(obj);
+};
+
+export type DeepFreezeOptions = {
+	/**
+	 * Detects circular references in objects and avoids infinite recursion.
+	 *
+	 * Default is `false`.
+	 */
+	mindCircularReferences?: boolean;
+};
 
 /**
  * Recursively freezes **arr** and all of its items & other properties.
  *
  * @param arr The 3-dimensional array to freeze.
+ * @param options Options to change the behavior of `deepFreeze`.
  *
  * @returns **arr**, deeply frozen.
  */
-function deepFreeze<T>(arr: readonly (readonly (readonly T[])[])[]): readonly (readonly (readonly Readonly<T>[])[])[];
+function deepFreeze<T>(
+	arr: readonly (readonly (readonly T[])[])[],
+	options?: Readonly<DeepFreezeOptions>,
+): readonly (readonly (readonly Readonly<T>[])[])[];
 
 /**
  * Recursively freezes **arr** and all of its items & other properties.
  *
  * @param arr The 2-dimensional array to freeze.
+ * @param options Options to change the behavior of `deepFreeze`.
  *
  * @returns **arr**, deeply frozen.
  */
-function deepFreeze<T>(arr: readonly (readonly T[])[]): readonly (readonly Readonly<T>[])[];
+function deepFreeze<T>(
+	arr: readonly (readonly T[])[],
+	options?: Readonly<DeepFreezeOptions>,
+): readonly (readonly Readonly<T>[])[];
 
 /**
  * Recursively freezes **arr** and all of its items & other properties.
  *
  * @param arr The 1-dimensional array to freeze.
+ * @param options Options to change the behavior of `deepFreeze`.
  *
  * @returns **arr**, deeply frozen.
  */
-function deepFreeze<T>(arr: readonly T[]): readonly Readonly<T>[];
+function deepFreeze<T>(
+	arr: readonly T[],
+	options?: Readonly<DeepFreezeOptions>,
+): readonly Readonly<T>[];
 
 /**
  * Recursively freezes **obj** and all of its properties.
  *
  * @param obj The object to freeze.
+ * @param options Options to change the behavior of `deepFreeze`.
  *
  * @returns **obj**, deeply frozen.
  */
-function deepFreeze<T>(obj: T): Readonly<T>;
+function deepFreeze<T>(obj: T, options?: Readonly<DeepFreezeOptions>): Readonly<T>;
 
-function deepFreeze<T>(obj: T): Readonly<T> {
-	if (!(canValueHaveProperties(obj))) {
-		return obj;
+function deepFreeze<T>(obj: T, options?: Readonly<DeepFreezeOptions>): Readonly<T> {
+	let frozenObjects: WeakSet<object>;
+	if (options?.mindCircularReferences === true) {
+		frozenObjects = new WeakSet();
+	} else {
+		frozenObjects = new NullWeakSet();
 	}
 
-	if ((typeof obj === "function") && ("prototype" in obj)) {
-		return deepFreezeFunctionWithPrototype(obj);
-	}
-
-	deepFreezeKeysOfObject(
-		(obj as Record<GenericKey, unknown>),
-		getPropertyKeys(obj),
-	);
-
-	if ((obj instanceof Map) || (obj instanceof Set)) {
-		for (const [key, value] of obj.entries()) {
-			deepFreeze(value);
-			deepFreeze(key);
-		}
-	}
-
-	return Object.freeze(obj);
+	return deepFreezeInternal(obj, frozenObjects);
 }
 
 deepFreeze(deepFreeze);
