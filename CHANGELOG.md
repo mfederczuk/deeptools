@@ -13,6 +13,10 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 ## Unreleased ##
 
+### Added ###
+
+* Option for `deepFreeze()` to avoid infinite recursion in case of circular references
+
 ### Security ###
 
 * Updated dependencies

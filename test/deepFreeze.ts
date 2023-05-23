@@ -293,5 +293,28 @@ describe("function deepFreeze()", function() {
 
 	it("should work with Promise objects"); // TODO
 
+	it("should throw a RangeError if trying to freeze an object containing a circular reference", function() {
+		const foo: Record<string, unknown> = {};
+		const bar = { foo } as const;
+		foo.bar = bar;
+
+		assert.throws(
+			() => {
+				deepFreeze(foo);
+			},
+			RangeError,
+		);
+	});
+
+	it("should not throw an error if trying to freeze an object containing a circular reference with the `mindCircularReferences` option turned on", function() {
+		const foo: Record<string, unknown> = {};
+		const bar = { foo } as const;
+		foo.bar = bar;
+
+		assert.doesNotThrow(() => {
+			deepFreeze(foo, { mindCircularReferences: true });
+		});
+	});
+
 	//#endregion
 });
