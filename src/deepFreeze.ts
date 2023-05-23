@@ -28,10 +28,7 @@ const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<
 		.filter((key: (keyof F)) => (key !== "prototype"));
 
 	deepFreezePrototypeExcludingConstructor(func.prototype);
-
-	for (const key of keys) {
-		deepFreezeInternal(func[key]);
-	}
+	deepFreezeKeysOfObject(func, keys);
 
 	return Object.freeze(func);
 };
