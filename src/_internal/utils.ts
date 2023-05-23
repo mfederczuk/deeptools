@@ -8,14 +8,18 @@ import type { GenericKey } from "../types";
 export type NonEmptyArray<T> = ([T, ...T[]] | [...T[], T]);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function isNonPrimitive(value: unknown): value is NonNullable<object | Function> {
+export type NonPrimitive = NonNullable<object | Function>;
+
+export function isNonPrimitive(value: unknown): value is NonPrimitive {
 	return (((typeof value === "object") && (value !== null)) ||
 	        (typeof value === "function"));
 }
 
-export function getPropertyKeys(obj: NonNullable<unknown>): GenericKey[] {
+export function getPropertyKeys(obj: NonPrimitive): GenericKey[];
+export function getPropertyKeys<T extends NonPrimitive>(obj: T): (keyof T)[];
+export function getPropertyKeys<T extends NonPrimitive>(obj: T): (keyof T)[] {
 	return [
-		...(Object.getOwnPropertyNames(obj)),
-		...(Object.getOwnPropertySymbols(obj)),
+		...(Object.getOwnPropertyNames(obj) as (keyof T)[]),
+		...(Object.getOwnPropertySymbols(obj) as (keyof T)[]),
 	];
 }

@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { getPropertyKeys, isNonPrimitive } from "./_internal/utils";
+import { NonPrimitive, getPropertyKeys, isNonPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
 
-const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
+const initCopy = (obj: NonPrimitive): NonNullable<object> => {
 	// <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects>
 	// these objects all seem to have some special built-in property that cannot be copied over after creation, so we
 	// need to have special cases to create them
@@ -101,7 +101,7 @@ export function deepCopy<T>(obj: T): T {
 
 	const copy: NonNullable<object> = initCopy(obj);
 
-	for (const propertyKey of getPropertyKeys(obj)) {
+	for (const propertyKey of getPropertyKeys<T & object>(obj)) {
 		const propertyDescriptor: PropertyDescriptor =
 			(Object.getOwnPropertyDescriptor(obj, propertyKey) as PropertyDescriptor);
 

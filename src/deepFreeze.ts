@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { getPropertyKeys, isNonPrimitive } from "./_internal/utils";
-import type { GenericKey } from "./types";
+import { NonPrimitive, getPropertyKeys, isNonPrimitive } from "./_internal/utils";
 
-const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]): void => {
+const deepFreezeKeysOfObject = <T extends NonPrimitive>(obj: T, keys: readonly (keyof T)[]): void => {
 	for (const key of keys) {
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 
@@ -16,22 +15,22 @@ const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly
 	}
 };
 
-const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>): void => {
-	const keys: GenericKey[] = getPropertyKeys(prototype)
-		.filter((key: GenericKey) => (key !== "constructor"));
+const deepFreezePrototypeExcludingConstructor = <P extends NonPrimitive>(prototype: P): void => {
+	const keys: (keyof P)[] = getPropertyKeys<P>(prototype)
+		.filter((key: (keyof P)) => (key !== "constructor"));
 
 	deepFreezeKeysOfObject(prototype, keys);
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
-	const keys: GenericKey[] = getPropertyKeys(func)
-		.filter((key: GenericKey) => (key !== "prototype"));
+	const keys: (keyof F)[] = getPropertyKeys<F>(func)
+		.filter((key: (keyof F)) => (key !== "prototype"));
 
 	deepFreezePrototypeExcludingConstructor(func.prototype);
 
 	for (const key of keys) {
-		deepFreezeInternal((func as Record<GenericKey, unknown>)[key]);
+		deepFreezeInternal(func[key]);
 	}
 
 	return Object.freeze(func);
@@ -47,8 +46,8 @@ const deepFreezeInternal = <T>(obj: T): Readonly<T> => {
 	}
 
 	deepFreezeKeysOfObject(
-		(obj as Record<GenericKey, unknown>),
-		getPropertyKeys(obj),
+		obj,
+		getPropertyKeys<T & object>(obj),
 	);
 
 	if ((obj instanceof Map) || (obj instanceof Set)) {

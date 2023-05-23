@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { NonEmptyArray, getPropertyKeys, isNonPrimitive } from "./_internal/utils";
+import { NonEmptyArray, NonPrimitive, getPropertyKeys, isNonPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
 import type { GenericKey } from "./types";
 
@@ -26,9 +26,9 @@ export type DeepWalkOptions = {
 	depth?: boolean;
 };
 
-const deepWalkInternal = (
+const deepWalkInternal = <T>(
 	keyPath: GenericKey[],
-	obj: unknown,
+	obj: T,
 	visitorFunc: PropertyVisitorFunc,
 	options: (Readonly<DeepWalkOptions> | undefined),
 	rootObject: unknown,
@@ -37,12 +37,12 @@ const deepWalkInternal = (
 		return;
 	}
 
-	for (const key of getPropertyKeys(obj)) {
+	for (const key of getPropertyKeys<T & NonPrimitive>(obj)) {
 		const depth: boolean = (options?.depth === true);
 
 		const newKeyPath: KeyPath = [...keyPath, key];
 
-		const value: unknown = (obj as Record<GenericKey, unknown>)[key];
+		const value: unknown = obj[key];
 
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 
