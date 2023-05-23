@@ -5,9 +5,9 @@
 
 # DeepTools #
 
-[version_shield]: https://img.shields.io/badge/version-2.0.0--rc01-informational.svg
-[release_page]: https://github.com/mfederczuk/deeptools/releases/tag/v2.0.0-rc01 "Release v2.0.0-rc01"
-[![version: 2.0.0-rc01][version_shield]][release_page]
+[version_shield]: https://img.shields.io/badge/version-2.1.0--indev01-informational.svg
+[release_page]: https://github.com/mfederczuk/deeptools/releases/tag/v2.1.0-indev01 "Release v2.1.0-indev01"
+[![version: 2.1.0-indev01][version_shield]][release_page]
 [![Changelog](https://img.shields.io/badge/-Changelog-informational.svg)](CHANGELOG.md "Changelog")
 
 ## About ##
