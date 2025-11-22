@@ -52,7 +52,11 @@
 
 		"test": "npx --package=mocha -- mocha",
 
-		"prepare": "npm run clean && npm run lint && npm run build && npm run postprocess && npm run test"
+		"lint-build-postprocess-test": "npm run lint && npm run build && npm run postprocess && npm run test",
+
+		"prepare": "npm run clean && npm run lint-build-postprocess-test",
+
+		"git-pre-commit": "npm run lint-build-postprocess-test"
 	},
 	"devDependencies": {
 		"@eslint/js": "9.39.1",
