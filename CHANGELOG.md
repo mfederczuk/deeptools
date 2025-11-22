@@ -13,6 +13,9 @@ and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/
 
 ## Unreleased ##
 
+The project got a big facelift.  
+All the dev dependencies were bumped up and the ESLint rules were made more strict.
+
 ### Deprecated ###
 
 * The type [`GenericKey`](src/types.ts) is deprecated in favor of the built-in type `PropertyKey`.  

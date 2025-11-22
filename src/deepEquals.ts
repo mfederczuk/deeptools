@@ -6,14 +6,14 @@
 import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive, NonPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
 
-export type DeepEqualsOptions = {
+export interface DeepEqualsOptions {
 	/**
 	 * Ignores the order that the properties are defined.
 	 *
 	 * Default is `true`.
 	 */
 	ignoreOrder?: boolean;
-};
+}
 
 const contentsEqual = (array1: unknown[], array2: unknown[], ignoreOrder: boolean): boolean => {
 	const length: number = array1.length;
@@ -68,6 +68,7 @@ const deepEqualProperty = <T extends NonPrimitive>(obj1: T, obj2: T, propertyKey
 	return deepEqualPropertyDescriptor(obj1PropDescriptor, obj2PropDescriptor);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 const deepEqualsInternal = <T1 extends NonPrimitive, T2 extends NonPrimitive>(
 	obj1: T1,
 	obj2: T2,

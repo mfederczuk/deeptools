@@ -3,14 +3,15 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-export type NonEmptyArray<T> = ([T, ...T[]] | [...T[], T]);
+export type NonEmptyArray<T> = [T, ...T[]] | [...T[], T];
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export type NonPrimitive = NonNullable<object | Function>;
 
 export function isNotPrimitive(value: unknown): value is NonPrimitive {
-	return (((typeof value === "object") && (value !== null)) ||
-	        (typeof value === "function"));
+	const isNonNullObject: boolean = (typeof value === "object") && (value !== null);
+
+	return isNonNullObject || (typeof value === "function");
 }
 
 export function getPropertyKeys<T extends NonPrimitive>(obj: T): (keyof T)[] {

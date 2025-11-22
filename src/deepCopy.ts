@@ -62,11 +62,17 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 	// these objects all seem to have some special built-in property that cannot be copied over after creation, so we
 	// need to have special cases to create them
 
-	if (obj instanceof Array) return new Array(obj.map(deepCopy));
+	if (obj instanceof Array) {
+		return new Array(obj.map(deepCopy));
+	}
 
-	if (obj instanceof RegExp) return new RegExp(obj);
+	if (obj instanceof RegExp) {
+		return new RegExp(obj);
+	}
 
-	if (obj instanceof Date) return new Date(obj);
+	if (obj instanceof Date) {
+		return new Date(obj);
+	}
 
 	if (obj instanceof Map) {
 		const copiedEntries: [unknown, unknown][] = [];
@@ -105,7 +111,7 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 
 	throwIfIsUncopiableType(obj);
 
-	return Object.create(obj);
+	return Object.create(obj) as NonNullable<object>;
 };
 
 /**
@@ -130,7 +136,7 @@ export function deepCopy<T>(obj: T): T {
 		const propertyDescriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, propertyKey);
 
 		if ("value" in propertyDescriptor) {
-			propertyDescriptor.value = deepCopy(propertyDescriptor.value);
+			propertyDescriptor.value = deepCopy(propertyDescriptor.value as unknown);
 		}
 
 		Object.defineProperty(copy, propertyKey, propertyDescriptor);
@@ -139,8 +145,12 @@ export function deepCopy<T>(obj: T): T {
 	// <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf>
 	// Mozilla recommends not using Object.setPrototypeOf for performance reasons, so we put at least put it behind a
 	// conditional
-	const objPrototype: (object | null) = Object.getPrototypeOf(obj);
+	const objPrototype: unknown = Object.getPrototypeOf(obj);
 	if (Object.getPrototypeOf(copy) !== objPrototype) {
+		if (typeof objPrototype !== "object") {
+			throw new TypeError("Object.getPrototypeOf() did not return an object");
+		}
+
 		Object.setPrototypeOf(copy, objPrototype);
 	}
 

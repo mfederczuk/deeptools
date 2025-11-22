@@ -5,24 +5,27 @@
 
 import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive, NonPrimitive } from "./_internal/utils";
 
-const deepFreezePropertiesOfObject = <T extends NonPrimitive>(obj: T, keys: readonly (keyof T)[]) => {
+const deepFreezePropertiesOfObject = <T extends NonPrimitive>(obj: T, keys: readonly (keyof T)[]): void => {
 	for (const key of keys) {
 		const descriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, key);
 
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		deepFreeze(descriptor.get);
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		deepFreeze(descriptor.set);
 		deepFreeze(descriptor.value);
 	}
 };
 
-const deepFreezePrototypeExcludingConstructor = <P extends NonPrimitive>(prototype: P) => {
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+const deepFreezePrototypeExcludingConstructor = <P extends NonPrimitive>(prototype: P): void => {
 	const keys: (keyof P)[] = getPropertyKeys(prototype)
 		.filter((key: keyof P) => (key !== "constructor"));
 
 	deepFreezePropertiesOfObject(prototype, keys);
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
 	const keys: (keyof F)[] = getPropertyKeys(func)
 		.filter((key: keyof F) => (key !== "prototype"));

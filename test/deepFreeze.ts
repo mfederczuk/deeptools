@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -7,23 +7,24 @@ import assert from "assert";
 import { describe } from "mocha";
 import { deepFreeze } from "../src";
 
-describe("function deepFreeze()", function() {
+describe("function deepFreeze()", function () {
 	//#region values w/out properties
 
-	it("should be a noop with undefined", function() {
+	it("should be a noop with undefined", function () {
+		// eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
 		assert.strictEqual(deepFreeze(undefined), undefined);
 	});
 
-	it("should be a noop with null", function() {
+	it("should be a noop with null", function () {
 		assert.strictEqual(deepFreeze(null), null);
 	});
 
-	it("should be a noop with booleans", function() {
+	it("should be a noop with booleans", function () {
 		assert.strictEqual(deepFreeze(true), true);
 		assert.strictEqual(deepFreeze(false), false);
 	});
 
-	it("should be a noop with numbers", function() {
+	it("should be a noop with numbers", function () {
 		assert.strictEqual(deepFreeze(654), 654);
 		assert.strictEqual(deepFreeze(-88), -88);
 
@@ -41,17 +42,17 @@ describe("function deepFreeze()", function() {
 		assert.strictEqual(deepFreeze(NaN), NaN);
 	});
 
-	it("should be a noop with strings", function() {
+	it("should be a noop with strings", function () {
 		assert.strictEqual(deepFreeze("1 2 3"), "1 2 3");
 		assert.strictEqual(deepFreeze(""), "");
 	});
 
-	it("should be a noop with bigints", function() {
+	it("should be a noop with bigints", function () {
 		assert.strictEqual(deepFreeze(BigInt("159753456258552162")), BigInt("159753456258552162"));
 		assert.strictEqual(deepFreeze(BigInt("-123456789987654321")), BigInt("-123456789987654321"));
 	});
 
-	it("should work with symbols", function() {
+	it("should work with symbols", function () {
 		const abcSymbol = Symbol("abc");
 		assert.strictEqual(deepFreeze(abcSymbol), abcSymbol);
 
@@ -68,10 +69,11 @@ describe("function deepFreeze()", function() {
 	};
 
 
-	it("should work with simple objects", function() {
+	it("should work with simple objects", function () {
 		const obj = {
 			a: {
 				x: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
 					"a x": undefined,
 				},
 				y: null,
@@ -95,6 +97,7 @@ describe("function deepFreeze()", function() {
 			() => {
 				obj.a = {
 					x: {
+						// eslint-disable-next-line @typescript-eslint/naming-convention
 						"a x": undefined,
 					},
 					y: null,
@@ -107,6 +110,7 @@ describe("function deepFreeze()", function() {
 		assert.throws(
 			() => {
 				obj.a.x = {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
 					"a x": undefined,
 				};
 			},
@@ -181,6 +185,7 @@ describe("function deepFreeze()", function() {
 
 
 		assert.strictEqual(obj.a.x["a x"], undefined);
+		// eslint-disable-next-line @typescript-eslint/naming-convention
 		assert.deepStrictEqual(obj.a.x, { "a x": undefined });
 		assert.strictEqual(obj.a.y, null);
 		assert.strictEqual(obj.a.z, 123);
@@ -188,6 +193,7 @@ describe("function deepFreeze()", function() {
 			obj.a,
 			{
 				x: {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
 					"a x": undefined,
 				},
 				y: null,
@@ -219,7 +225,7 @@ describe("function deepFreeze()", function() {
 
 	it("should work objects with custom configured properties"); // TODO
 
-	it("should work with object getters", function() {
+	it("should work with object getters", function () {
 		const yVal: number = 64;
 
 		const obj = {
@@ -237,7 +243,7 @@ describe("function deepFreeze()", function() {
 		});
 	});
 
-	it("should work with object setters", function() {
+	it("should work with object setters", function () {
 		const obj = {
 			set x(_: unknown) {
 				throw new Error("Don't invoke me either, bro");
@@ -245,7 +251,7 @@ describe("function deepFreeze()", function() {
 
 			set y(_: unknown) {
 				void _;
-			}
+			},
 		};
 
 		assert.doesNotThrow(() => {

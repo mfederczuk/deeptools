@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: CC0-1.0
+// <https://www.typescriptlang.org/tsconfig>
+{
+	"compilerOptions": {
+		// Type Checking
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strict": true,
+
+		// Modules
+		"module": "CommonJS",
+
+		// Interop Constraints
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+
+		// Language and Environment
+		"target": "ES2015",
+	},
+}

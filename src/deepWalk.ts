@@ -16,22 +16,23 @@ export type PropertyVisitorFunc = (
 	rootObject: unknown,
 ) => void;
 
-export type DeepWalkOptions = {
+export interface DeepWalkOptions {
 	/**
 	 * Before visiting an object, visit all of its properties.
 	 *
 	 * Default value is `false`.
 	 */
 	depth?: boolean;
-};
+}
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 const deepWalkInternal = <T>(
 	keyPath: PropertyKey[],
 	obj: T,
 	visitorFunc: PropertyVisitorFunc,
 	options: (Readonly<DeepWalkOptions> | undefined),
 	rootObject: unknown,
-) => {
+): void => {
 	if (!(isNotPrimitive(obj))) {
 		return;
 	}
@@ -45,7 +46,9 @@ const deepWalkInternal = <T>(
 
 		const descriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, key);
 
-		const visit = (() => visitorFunc(newKeyPath, value, obj, descriptor, rootObject));
+		const visit = (): void => {
+			visitorFunc(newKeyPath, value, obj, descriptor, rootObject);
+		};
 
 		if (!depth) {
 			visit();
@@ -78,7 +81,7 @@ export function deepWalk(
 	obj: unknown,
 	visitorFunc: PropertyVisitorFunc,
 	options?: Readonly<DeepWalkOptions>,
-) {
-	return deepWalkInternal([], obj, visitorFunc, options, obj);
+): void {
+	deepWalkInternal([], obj, visitorFunc, options, obj);
 }
 deepFreeze(deepWalk);
