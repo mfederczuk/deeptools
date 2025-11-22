@@ -11,6 +11,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [**Keep a Changelog v1.0.0**](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/spec/v2.0.0.html).
 
+## [v2.1.0-indev01] - 2023-05-23 ##
+
+[v2.1.0-indev01]: https://github.com/mfederczuk/deeptools/releases/v2.1.0-indev01
+
+### Added ###
+
+* Option for `deepFreeze()` to avoid infinite recursion in case of circular references
+
+### Security ###
+
+* Updated dependencies
+
 ## [v2.0.0-rc02] - 2025-10-22 ##
 
 [v2.0.0-rc02]: <https://github.com/mfederczuk/deeptools/releases/v2.0.0-rc02>

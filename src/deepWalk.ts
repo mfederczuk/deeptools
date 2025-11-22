@@ -42,7 +42,7 @@ const deepWalkInternal = <T>(
 
 		const newKeyPath: KeyPath = [...keyPath, key];
 
-		const value: unknown = (obj as Record<PropertyKey, unknown>)[key];
+		const value: unknown = obj[key];
 
 		const descriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, key);
 
