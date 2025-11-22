@@ -1,13 +1,12 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { deepFreeze } from "./deepFreeze";
-import type { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys, NonEmptyArray } from "./_internal/utils";
 
-export type KeyPath = NonEmptyArray<GenericKey>;
+export type KeyPath = NonEmptyArray<PropertyKey>;
 
 export type PropertyVisitorFunc = (
 	path: KeyPath,
@@ -27,7 +26,7 @@ export type DeepWalkOptions = {
 };
 
 const deepWalkInternal = (
-	keyPath: GenericKey[],
+	keyPath: PropertyKey[],
 	obj: unknown,
 	visitorFunc: PropertyVisitorFunc,
 	options: (Readonly<DeepWalkOptions> | undefined),
@@ -42,7 +41,7 @@ const deepWalkInternal = (
 
 		const newKeyPath: KeyPath = [...keyPath, key];
 
-		const value: unknown = (obj as Record<GenericKey, unknown>)[key];
+		const value: unknown = (obj as Record<PropertyKey, unknown>)[key];
 
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 

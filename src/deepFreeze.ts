@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import type { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
-const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]) => {
+const deepFreezeKeysOfObject = (obj: Record<PropertyKey, unknown>, keys: readonly PropertyKey[]) => {
 	for (const key of keys) {
 		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
 
@@ -17,9 +16,9 @@ const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly
 };
 deepFreeze(deepFreezeKeysOfObject);
 
-const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>) => {
-	const keys: GenericKey[] = getPropertyKeys(prototype)
-		.filter((key: GenericKey) => (key !== "constructor"));
+const deepFreezePrototypeExcludingConstructor = (prototype: Record<PropertyKey, unknown>) => {
+	const keys: PropertyKey[] = getPropertyKeys(prototype)
+		.filter((key: PropertyKey) => (key !== "constructor"));
 
 	deepFreezeKeysOfObject(prototype, keys);
 };
@@ -27,13 +26,13 @@ deepFreeze(deepFreezePrototypeExcludingConstructor);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
-	const keys: GenericKey[] = getPropertyKeys(func)
-		.filter((key: GenericKey) => (key !== "prototype"));
+	const keys: PropertyKey[] = getPropertyKeys(func)
+		.filter((key: PropertyKey) => (key !== "prototype"));
 
 	deepFreezePrototypeExcludingConstructor(func.prototype);
 
 	for (const key of keys) {
-		deepFreeze((func as Record<GenericKey, unknown>)[key]);
+		deepFreeze((func as Record<PropertyKey, unknown>)[key]);
 	}
 
 	return Object.freeze(func);
@@ -87,7 +86,7 @@ function deepFreeze<T>(obj: T): Readonly<T> {
 	}
 
 	deepFreezeKeysOfObject(
-		(obj as Record<GenericKey, unknown>),
+		(obj as Record<PropertyKey, unknown>),
 		getPropertyKeys(obj),
 	);
 

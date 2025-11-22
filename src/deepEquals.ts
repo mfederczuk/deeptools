@@ -1,10 +1,9 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { deepFreeze } from "./deepFreeze";
-import type { GenericKey } from "./types";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
 export type DeepEqualsOptions = {
@@ -38,8 +37,8 @@ export function deepEquals(
 		return (obj1 === obj2);
 	}
 
-	const obj1Keys: GenericKey[] = getPropertyKeys(obj1);
-	const obj2Keys: GenericKey[] = getPropertyKeys(obj2);
+	const obj1Keys: PropertyKey[] = getPropertyKeys(obj1);
+	const obj2Keys: PropertyKey[] = getPropertyKeys(obj2);
 
 	if (obj1Keys.length !== obj2Keys.length) {
 		return false;

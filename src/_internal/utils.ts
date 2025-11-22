@@ -1,9 +1,7 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
-import type { GenericKey } from "../types";
 
 export type NonEmptyArray<T> = ([T, ...T[]] | [...T[], T]);
 
@@ -13,7 +11,7 @@ export function canValueHaveProperties(value: unknown): value is NonNullable<(ob
 	        (typeof value === "function"));
 }
 
-export function getPropertyKeys(obj: NonNullable<unknown>): GenericKey[] {
+export function getPropertyKeys(obj: NonNullable<unknown>): PropertyKey[] {
 	return [
 		...(Object.getOwnPropertyNames(obj)),
 		...(Object.getOwnPropertySymbols(obj)),
