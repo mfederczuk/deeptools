@@ -1,0 +1,133 @@
+#!/usr/bin/env node
+// -*- javascript -*-
+// vim: set syntax=javascript
+// code: language=javascript
+
+/*
+ * Copyright (c) 2025 Michael Federczuk
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+const childProcess = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+const now = new Date();
+
+const argv0 = (() => {
+	let argv0 = process.argv[1];
+
+	if (path.isAbsolute(argv0)) {
+		argv0 = path.basename(argv0);
+	}
+
+	return argv0;
+})();
+
+const version = (() => {
+	const VERSION_MAJOR_MINOR_PATCH = /(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)/;
+	const VERSION_PRE_RELEASE = /-(indev|rc)(0[1-9]|[1-9][0-9]+)/;
+	const VERSION_REGEXP = new RegExp(`^${VERSION_MAJOR_MINOR_PATCH.source}(${VERSION_PRE_RELEASE.source})?$`);
+
+	const printUsage = () => {
+		console.error(`usage: ${argv0} <version>`);
+	};
+
+	const args = process.argv.slice(2);
+
+	switch (args.length) {
+		case 0: {
+			console.error(`${argv0}: missing argument: <version>`);
+			printUsage();
+
+			process.exit(3);
+		}
+
+		case 1: {
+			const arg = args[0];
+
+			if (arg === "") {
+				console.error(`${argv0}: argument must not be empty`);
+				printUsage();
+
+				process.exit(9);
+			}
+
+			if (!(VERSION_REGEXP.test(arg))) {
+				console.error(`${argv0}: ${arg}: invalid project version`);
+				process.exit(13);
+			}
+
+			return arg;
+		}
+
+		default: {
+			console.error(`${argv0}: too many arguments ${args.length - 1}`);
+			printUsage();
+
+			process.exit(4);
+		}
+	}
+})();
+
+/**
+ * @param {string} relativeFilePath
+ * @param {(fileContents: string) => string} transform
+ */
+const updateFileContents = (relativeFilePath, transform) => {
+	const filePath = path.join(__dirname, relativeFilePath);
+
+	let fileContents = fs.readFileSync(filePath, { encoding: "utf-8" });
+	fileContents = transform(fileContents);
+
+	fs.writeFileSync(filePath, fileContents, { encoding: "utf-8" });
+};
+
+updateFileContents("package.json", (fileContents) => {
+	return fileContents.replace(/^(.*"version"\s*:\s*")[^"]*(".*)$/gs, `$1${version}$2`);
+});
+
+const year = now.getUTCFullYear().toString().padStart(4, "0");
+
+/**
+ * @param {string} string
+ * @returns {string}
+ */
+const updateCopyrightYear = (string) => {
+	return string
+		.replaceAll(
+			/^(.*\bCopyright\s+\(\s*c\s*\)\s*(?:[0-9]+\s*-\s*)?)[0-9]+(\b.*)$/gis,
+			`$1${year}$2`
+		);
+};
+
+updateFileContents("CHANGELOG.md", (fileContents) => {
+	const month = now.getUTCMonth().toString().padStart(2, "0");
+	const day = now.getUTCDate().toString().padStart(2, "0");
+
+	const date = `${year}-${month}-${day}`;
+
+	return updateCopyrightYear(fileContents)
+		.replaceAll(
+			/^(\s*##\s*)Unreleased((?:\s*##)?\s*)$/gim,
+			`$1[v${version}] - ${date}$2\n` +
+			`[v${version}]: <https://github.com/mfederczuk/deeptools/releases/v${version}>\n`,
+		);
+});
+
+updateFileContents("README.md", (fileContents) => {
+	const versionShieldUrl = `https://img.shields.io/badge/version-${version.replaceAll("-", "--")}-informational.svg`;
+	const releasePageUrl = `https://github.com/mfederczuk/deeptools/releases/tag/v${version}`;
+
+	return updateCopyrightYear(fileContents)
+		.replaceAll(
+			/^(.*)<!--\s*\{\{\s*VERSION_SHIELD\s*\}\}\s*-->(.*)$/gs,
+			"$1" +
+			`[version_shield]: <${versionShieldUrl}>\n` +
+			`[release_page]: <${releasePageUrl}> "GitHub Release page for version ${version}"\n` +
+			`[![version: ${version}][version_shield]][release_page]` +
+			"$2"
+		);
+});
+
+childProcess.execFileSync("npm", ["install"], { cwd: __dirname, stdio: "inherit" });

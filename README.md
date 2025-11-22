@@ -1,13 +1,11 @@
 <!--
-  Copyright (c) 2023 Michael Federczuk
+  Copyright (c) 2025 Michael Federczuk
   SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 # DeepTools #
 
-[version_shield]: https://img.shields.io/badge/version-2.0.0--rc01-informational.svg
-[release_page]: https://github.com/mfederczuk/deeptools/releases/tag/v2.0.0-rc01 "Release v2.0.0-rc01"
-[![version: 2.0.0-rc01][version_shield]][release_page]
+<!-- {{VERSION_SHIELD}} -->
 [![Changelog](https://img.shields.io/badge/-Changelog-informational.svg)](CHANGELOG.md "Changelog")
 
 ## About ##
