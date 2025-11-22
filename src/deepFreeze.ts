@@ -5,7 +5,7 @@
 
 import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive, NonPrimitive } from "./_internal/utils";
 
-const deepFreezeKeysOfObject = <T extends NonPrimitive>(obj: T, keys: readonly (keyof T)[]) => {
+const deepFreezePropertiesOfObject = <T extends NonPrimitive>(obj: T, keys: readonly (keyof T)[]) => {
 	for (const key of keys) {
 		const descriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, key);
 
@@ -19,7 +19,7 @@ const deepFreezePrototypeExcludingConstructor = <P extends NonPrimitive>(prototy
 	const keys: (keyof P)[] = getPropertyKeys(prototype)
 		.filter((key: keyof P) => (key !== "constructor"));
 
-	deepFreezeKeysOfObject(prototype, keys);
+	deepFreezePropertiesOfObject(prototype, keys);
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -28,7 +28,7 @@ const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<
 		.filter((key: keyof F) => (key !== "prototype"));
 
 	deepFreezePrototypeExcludingConstructor(func.prototype);
-	deepFreezeKeysOfObject(func, keys);
+	deepFreezePropertiesOfObject(func, keys);
 
 	return Object.freeze(func);
 };
@@ -79,7 +79,7 @@ function deepFreeze<T>(obj: T): Readonly<T> {
 		return deepFreezeFunctionWithPrototype(obj);
 	}
 
-	deepFreezeKeysOfObject(obj, getPropertyKeys(obj));
+	deepFreezePropertiesOfObject(obj, getPropertyKeys(obj));
 
 	if ((obj instanceof Map) || (obj instanceof Set)) {
 		for (const [key, value] of obj.entries()) {
