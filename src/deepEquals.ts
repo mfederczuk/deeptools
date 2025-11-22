@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { deepFreeze } from "./deepFreeze";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
+import { deepFreeze } from "./deepFreeze";
 
 export type DeepEqualsOptions = {
 	/**

@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { deepFreeze } from "./deepFreeze";
 import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
+import { deepFreeze } from "./deepFreeze";
 
 const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 	// <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects>

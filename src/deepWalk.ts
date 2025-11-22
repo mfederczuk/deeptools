@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { deepFreeze } from "./deepFreeze";
 import { canValueHaveProperties, getPropertyKeys, NonEmptyArray } from "./_internal/utils";
+import { deepFreeze } from "./deepFreeze";
 
 export type KeyPath = NonEmptyArray<PropertyKey>;
 
