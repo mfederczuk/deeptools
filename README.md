@@ -5,7 +5,9 @@
 
 # DeepTools #
 
-<!-- {{VERSION_SHIELD}} -->
+[version_shield]: <https://img.shields.io/badge/version-2.1.0--rc01-informational.svg>
+[release_page]: <https://github.com/mfederczuk/deeptools/releases/tag/v2.1.0-rc01> "GitHub Release page for version 2.1.0-rc01"
+[![version: 2.1.0-rc01][version_shield]][release_page]
 [![Changelog](https://img.shields.io/badge/-Changelog-informational.svg)](CHANGELOG.md "Changelog")
 
 ## About ##
