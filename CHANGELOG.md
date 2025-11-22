@@ -11,7 +11,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [**Keep a Changelog v1.0.0**](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [**Semantic Versioning v2.0.0**](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased ##
+## [v2.0.0-rc02] - 2025-10-22 ##
+
+[v2.0.0-rc02]: <https://github.com/mfederczuk/deeptools/releases/v2.0.0-rc02>
 
 The project got a big facelift.  
 All the dev dependencies were bumped up and the ESLint rules were made more strict.
