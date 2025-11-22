@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: CC0-1.0
+// <https://www.typescriptlang.org/tsconfig>
 {
+	"extends": "./tsconfig.base.json",
 	"compilerOptions": {
+		// Modules
+		"rootDir": "src",
+
+		// Emit
 		"declaration": true,
 		"declarationDir": "types",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"module": "commonjs",
-		"noImplicitAny": true,
 		"outDir": "out",
-		"skipLibCheck": true,
-		"strict": true,
-		"target": "ES2015",
+		"removeComments": true,
 	},
 	"include": ["src"],
 }

@@ -1,13 +1,12 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive, NonEmptyArray } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
-import type { GenericKey } from "./types";
-import { canValueHaveProperties, getPropertyKeys, NonEmptyArray } from "./_internal/utils";
 
-export type KeyPath = NonEmptyArray<GenericKey>;
+export type KeyPath = NonEmptyArray<PropertyKey>;
 
 export type PropertyVisitorFunc = (
 	path: KeyPath,
@@ -17,23 +16,24 @@ export type PropertyVisitorFunc = (
 	rootObject: unknown,
 ) => void;
 
-export type DeepWalkOptions = {
+export interface DeepWalkOptions {
 	/**
 	 * Before visiting an object, visit all of its properties.
 	 *
 	 * Default value is `false`.
 	 */
 	depth?: boolean;
-};
+}
 
-const deepWalkInternal = (
-	keyPath: GenericKey[],
-	obj: unknown,
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+const deepWalkInternal = <T>(
+	keyPath: PropertyKey[],
+	obj: T,
 	visitorFunc: PropertyVisitorFunc,
 	options: (Readonly<DeepWalkOptions> | undefined),
 	rootObject: unknown,
-) => {
-	if (!(canValueHaveProperties(obj))) {
+): void => {
+	if (!(isNotPrimitive(obj))) {
 		return;
 	}
 
@@ -42,11 +42,13 @@ const deepWalkInternal = (
 
 		const newKeyPath: KeyPath = [...keyPath, key];
 
-		const value: unknown = (obj as Record<GenericKey, unknown>)[key];
+		const value: unknown = (obj as Record<PropertyKey, unknown>)[key];
 
-		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
+		const descriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, key);
 
-		const visit = (() => visitorFunc(newKeyPath, value, obj, descriptor, rootObject));
+		const visit = (): void => {
+			visitorFunc(newKeyPath, value, obj, descriptor, rootObject);
+		};
 
 		if (!depth) {
 			visit();
@@ -65,7 +67,6 @@ const deepWalkInternal = (
 		}
 	}
 };
-deepFreeze(deepWalkInternal);
 
 /**
  * Recursively walks through **obj**.
@@ -80,7 +81,7 @@ export function deepWalk(
 	obj: unknown,
 	visitorFunc: PropertyVisitorFunc,
 	options?: Readonly<DeepWalkOptions>,
-) {
-	return deepWalkInternal([], obj, visitorFunc, options, obj);
+): void {
+	deepWalkInternal([], obj, visitorFunc, options, obj);
 }
 deepFreeze(deepWalk);

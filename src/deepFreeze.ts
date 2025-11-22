@@ -1,44 +1,40 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import type { GenericKey } from "./types";
-import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
+import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive, NonPrimitive } from "./_internal/utils";
 
-const deepFreezeKeysOfObject = (obj: Record<GenericKey, unknown>, keys: readonly GenericKey[]) => {
+const deepFreezePropertiesOfObject = <T extends NonPrimitive>(obj: T, keys: readonly (keyof T)[]): void => {
 	for (const key of keys) {
-		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
+		const descriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, key);
 
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		deepFreeze(descriptor.get);
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		deepFreeze(descriptor.set);
 		deepFreeze(descriptor.value);
 	}
 };
-deepFreeze(deepFreezeKeysOfObject);
 
-const deepFreezePrototypeExcludingConstructor = (prototype: Record<GenericKey, unknown>) => {
-	const keys: GenericKey[] = getPropertyKeys(prototype)
-		.filter((key: GenericKey) => (key !== "constructor"));
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+const deepFreezePrototypeExcludingConstructor = <P extends NonPrimitive>(prototype: P): void => {
+	const keys: (keyof P)[] = getPropertyKeys(prototype)
+		.filter((key: keyof P) => (key !== "constructor"));
 
-	deepFreezeKeysOfObject(prototype, keys);
+	deepFreezePropertiesOfObject(prototype, keys);
 };
-deepFreeze(deepFreezePrototypeExcludingConstructor);
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
-	const keys: GenericKey[] = getPropertyKeys(func)
-		.filter((key: GenericKey) => (key !== "prototype"));
+	const keys: (keyof F)[] = getPropertyKeys(func)
+		.filter((key: keyof F) => (key !== "prototype"));
 
 	deepFreezePrototypeExcludingConstructor(func.prototype);
-
-	for (const key of keys) {
-		deepFreeze((func as Record<GenericKey, unknown>)[key]);
-	}
+	deepFreezePropertiesOfObject(func, keys);
 
 	return Object.freeze(func);
 };
-deepFreeze(deepFreezeFunctionWithPrototype);
 
 
 /**
@@ -78,7 +74,7 @@ function deepFreeze<T>(arr: readonly T[]): readonly Readonly<T>[];
 function deepFreeze<T>(obj: T): Readonly<T>;
 
 function deepFreeze<T>(obj: T): Readonly<T> {
-	if (!(canValueHaveProperties(obj))) {
+	if (!(isNotPrimitive(obj))) {
 		return obj;
 	}
 
@@ -86,10 +82,7 @@ function deepFreeze<T>(obj: T): Readonly<T> {
 		return deepFreezeFunctionWithPrototype(obj);
 	}
 
-	deepFreezeKeysOfObject(
-		(obj as Record<GenericKey, unknown>),
-		getPropertyKeys(obj),
-	);
+	deepFreezePropertiesOfObject(obj, getPropertyKeys(obj));
 
 	if ((obj instanceof Map) || (obj instanceof Set)) {
 		for (const [key, value] of obj.entries()) {

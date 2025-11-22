@@ -1,21 +1,35 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import type { GenericKey } from "../types";
+export type NonEmptyArray<T> = [T, ...T[]] | [...T[], T];
 
-export type NonEmptyArray<T> = ([T, ...T[]] | [...T[], T]);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+export type NonPrimitive = NonNullable<object | Function>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function canValueHaveProperties(value: unknown): value is NonNullable<(object | Function)> {
-	return (((typeof value === "object") && (value !== null)) ||
-	        (typeof value === "function"));
+export function isNotPrimitive(value: unknown): value is NonPrimitive {
+	const isNonNullObject: boolean = (typeof value === "object") && (value !== null);
+
+	return isNonNullObject || (typeof value === "function");
 }
 
-export function getPropertyKeys(obj: NonNullable<unknown>): GenericKey[] {
+export function getPropertyKeys<T extends NonPrimitive>(obj: T): (keyof T)[] {
 	return [
 		...(Object.getOwnPropertyNames(obj)),
 		...(Object.getOwnPropertySymbols(obj)),
-	];
+	] as (keyof T)[];
+}
+
+export function getOwnPropertyDescriptor<T extends NonPrimitive>(
+	object: T,
+	propertyKey: keyof T,
+): PropertyDescriptor {
+	const descriptor: PropertyDescriptor | undefined = Object.getOwnPropertyDescriptor(object, propertyKey);
+
+	if (descriptor === undefined) {
+		throw new TypeError("Object.getOwnPropertyDescriptor() unexpectedly returned `undefined`");
+	}
+
+	return descriptor;
 }

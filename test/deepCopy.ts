@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -7,23 +7,24 @@ import assert from "assert";
 import { describe } from "mocha";
 import { deepCopy } from "../src";
 
-describe("function deepCopy()", function() {
+describe("function deepCopy()", function () {
 	//#region values w/out properties
 
-	it("should work with undefined", function() {
+	it("should work with undefined", function () {
+		// eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
 		assert.strictEqual(deepCopy(undefined), undefined);
 	});
 
-	it("should work with null", function() {
+	it("should work with null", function () {
 		assert.strictEqual(deepCopy(null), null);
 	});
 
-	it("should work with booleans", function() {
+	it("should work with booleans", function () {
 		assert.strictEqual(deepCopy(true), true);
 		assert.strictEqual(deepCopy(false), false);
 	});
 
-	it("should work with numbers", function() {
+	it("should work with numbers", function () {
 		assert.strictEqual(deepCopy(64), 64);
 		assert.strictEqual(deepCopy(123456789), 123456789);
 		assert.strictEqual(deepCopy(-77), -77);
@@ -47,7 +48,7 @@ describe("function deepCopy()", function() {
 		assert.notStrictEqual(deepCopy(-1), NaN);
 	});
 
-	it("should work with strings", function() {
+	it("should work with strings", function () {
 		assert.strictEqual(deepCopy("foobar"), "foobar");
 		assert.strictEqual(deepCopy("yee haw, pardner'"), "yee haw, pardner'");
 		assert.strictEqual(deepCopy(""), "");
@@ -58,14 +59,14 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(deepCopy(veryLongString), veryLongString);
 	});
 
-	it("should work with bigints", function() {
+	it("should work with bigints", function () {
 		assert.strictEqual(deepCopy(BigInt("13579")), BigInt("13579"));
 		assert.strictEqual(deepCopy(BigInt("99999999999999999999999999999999")), BigInt("99999999999999999999999999999999"));
 		assert.strictEqual(deepCopy(BigInt("-864297531")), BigInt("-864297531"));
 		assert.strictEqual(deepCopy(BigInt("-31866526658764854719684918615")), BigInt("-31866526658764854719684918615"));
 	});
 
-	it("should work with symbols (same symbol instance, not just same description)", function() {
+	it("should work with symbols (same symbol instance, not just same description)", function () {
 		const fooSymInput = Symbol("foo");
 		const fooSymCopy = deepCopy(fooSymInput);
 		assert.strictEqual(fooSymCopy, fooSymInput);
@@ -94,6 +95,7 @@ describe("function deepCopy()", function() {
 
 	const standardObjectAssert = (copy: object, input: object): (void | never) => {
 		assert.deepStrictEqual(copy, input);
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string
 		assert.strictEqual(String(copy), String(input));
 		assert.notStrictEqual(copy, input);
 	};
@@ -103,7 +105,7 @@ describe("function deepCopy()", function() {
 	};
 
 
-	it("should work with simple objects", function() {
+	it("should work with simple objects", function () {
 		assert.notStrictEqual(deepCopy({}), {});
 
 
@@ -129,15 +131,18 @@ describe("function deepCopy()", function() {
 		assert.notStrictEqual(fooCopy.bar, fooInput.bar);
 		assert.notStrictEqual(fooCopy.yee, fooInput.yee);
 		assert.notDeepStrictEqual(fooCopy, fooInput);
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string
 		assert.strictEqual(String(fooCopy), String(fooInput));
 
 
 		const barInput = {
 			test: {
+				// eslint-disable-next-line @typescript-eslint/naming-convention
 				"space in key": {
+					// eslint-disable-next-line @typescript-eslint/naming-convention
 					"?": 0,
 				},
-				foobar: null,
+				"foobar": null,
 			},
 			arr: [
 				"string1",
@@ -182,7 +187,7 @@ describe("function deepCopy()", function() {
 		standardObjectAssert(barCopy, barInput);
 	});
 
-	it("should work with arrays", function() {
+	it("should work with arrays", function () {
 		const fooInput = [
 			64,
 			"foo bar",
@@ -211,21 +216,23 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const barInput = [
 			true,
 			{
 				// cSpell:ignore boycow cowcow boyboy
-				cowboy: "yee haw",
-				boycow: "haw yee",
-				cowcow: "yee yee",
-				boyboy: "haw haw",
+				"cowboy": "yee haw",
+				"boycow": "haw yee",
+				"cowcow": "yee yee",
+				"boyboy": "haw haw",
+				// eslint-disable-next-line @typescript-eslint/naming-convention
 				"what's so funny?": "you wouldn't get it",
 			},
 			false,
 		] as const;
-		(barInput as any)["yee"] = 55;
-		(barInput as any)["haw"] = [66];
+		(barInput as any).yee = 55;
+		(barInput as any).haw = [66];
 		const barCopy = deepCopy(barInput);
 
 		assert.strictEqual(barCopy[0], barInput[0]);
@@ -239,24 +246,24 @@ describe("function deepCopy()", function() {
 
 		assert.strictEqual(barCopy[2], barInput[2]);
 
-		assert.strictEqual((barCopy as any)["yee"], 55);
-		assert.strictEqual((barCopy as any)["haw"][0], 66);
+		assert.strictEqual((barCopy as any).yee, 55);
+		assert.strictEqual((barCopy as any).haw[0], 66);
 
 		standardObjectAssert(barCopy, barInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
-	it("should work with classes", function() {
+	it("should work with classes", function () {
 		class Foo {
-			constructor(
-				readonly a: number,
-				readonly b: string,
-			) {
-				// eslint-disable-next-line no-empty-function
-			}
 
-			yeeHaw() {
+			public constructor(
+				public readonly a: number,
+				public readonly b: string,
+			) { }
+
+			public yeeHaw(): never {
 				throw new Error("Don't invoke me, bro");
 			}
 		}
@@ -268,10 +275,12 @@ describe("function deepCopy()", function() {
 		assert.strictEqual(fooCopy.b, fooInput.b);
 
 		assert.strictEqual(Object.getPrototypeOf(fooCopy), Object.getPrototypeOf(fooInput));
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		assert.strictEqual(fooCopy.yeeHaw, fooInput.yeeHaw);
 		assert.strictEqual(fooCopy.constructor, fooInput.constructor);
 
 		assert.strictEqual(Object.getPrototypeOf(fooCopy), Foo.prototype);
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		assert.strictEqual(fooCopy.yeeHaw, Foo.prototype.yeeHaw);
 		assert.strictEqual(fooCopy.constructor, Foo);
 
@@ -279,10 +288,11 @@ describe("function deepCopy()", function() {
 
 
 		class Bar extends Foo {
-			constructor(
+
+			public constructor(
 				a: number,
 				b: string,
-				readonly c: boolean,
+				public readonly c: boolean,
 			) {
 				super(a, b);
 			}
@@ -297,20 +307,23 @@ describe("function deepCopy()", function() {
 
 
 		assert.strictEqual(Object.getPrototypeOf(barCopy), Object.getPrototypeOf(barInput));
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		assert.strictEqual(barCopy.yeeHaw, barInput.yeeHaw);
 		assert.strictEqual(barCopy.constructor, barInput.constructor);
 
 		assert.strictEqual(Object.getPrototypeOf(barCopy), Bar.prototype);
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		assert.strictEqual(barCopy.yeeHaw, Bar.prototype.yeeHaw);
 		assert.strictEqual(barCopy.constructor, Bar);
 
 		assert.strictEqual(Object.getPrototypeOf(Object.getPrototypeOf(barCopy)), Foo.prototype);
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		assert.strictEqual(barCopy.yeeHaw, Foo.prototype.yeeHaw);
 
 		standardObjectAssert(barCopy, barInput);
 	});
 
-	it("should work with objects with custom configured properties", function() {
+	it("should work with objects with custom configured properties", function () {
 		const objInput: Record<string, unknown> = {};
 		const fooKey = "foo";
 		const barKey = "bar";
@@ -354,7 +367,7 @@ describe("function deepCopy()", function() {
 		);
 	});
 
-	it("should work with objects with getters", function() {
+	it("should work with objects with getters", function () {
 		const fooInput = {
 			get x(): never {
 				throw new Error("Don't invoke me, bro");
@@ -368,13 +381,14 @@ describe("function deepCopy()", function() {
 		const fooCopy = deepCopy(fooInput);
 
 		assert.throws(() => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			fooCopy.x;
 		});
 		assert.strictEqual(fooCopy.y, fooInput.y);
 		assert.notStrictEqual(fooCopy, fooInput);
 	});
 
-	it("should work with objects with setters", function() {
+	it("should work with objects with setters", function () {
 		const fooInput = {
 			set x(_: number) {
 				throw new Error("Don't invoke me either, bro");
@@ -394,7 +408,7 @@ describe("function deepCopy()", function() {
 		assert.notStrictEqual(fooCopy, fooInput);
 	});
 
-	it("should work with Date objects", function() {
+	it("should work with Date objects", function () {
 		const fooInput = new Date(2147483647000);
 		const fooCopy = deepCopy(fooInput);
 
@@ -403,6 +417,7 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const barInput = new Date();
 		(barInput as any)["Hello there"] = "General Kenobi";
@@ -419,11 +434,12 @@ describe("function deepCopy()", function() {
 
 		standardObjectAssert(barCopy, barInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
-	it("should work with RegExp objects", function() {
-		const assertRegExp = (copy: RegExp, input: RegExp) => {
+	it("should work with RegExp objects", function () {
+		const assertRegExp = (copy: RegExp, input: RegExp): void => {
 			assert.strictEqual(copy.source, input.source);
 
 			assert.strictEqual(copy.flags, input.flags);
@@ -457,20 +473,23 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const key: string = "i don't know man i'm running out of random strings";
 
 		const yeeInput = /foobar/;
-		(yeeInput as any)["haw"] = { [key]: 7 };
-		(yeeInput as any)["yeehaw"] = true;
+		(yeeInput as any).haw = { [key]: 7 };
+		(yeeInput as any).yeehaw = true;
 
 		const yeeCopy = deepCopy(yeeInput);
 
-		assert.strictEqual((yeeCopy as any)["haw"][key], (yeeInput as any)["haw"][key]);
-		standardObjectAssert((yeeCopy as any)["haw"], (yeeInput as any)["haw"]);
-		assert.strictEqual((yeeCopy as any)["yeehaw"], true);
+		assert.strictEqual((yeeCopy as any).haw[key], (yeeInput as any).haw[key]);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+		standardObjectAssert((yeeCopy as any).haw, (yeeInput as any).haw);
+		assert.strictEqual((yeeCopy as any).yeehaw, true);
 		assertRegExp(yeeCopy, yeeInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
@@ -480,7 +499,7 @@ describe("function deepCopy()", function() {
 
 	//#region scalar arrays
 
-	it("should work with Int8Array objects", function() {
+	it("should work with Int8Array objects", function () {
 		const fooInput = new Int8Array([-128, -64, 0, 63, 127]);
 		const fooCopy = deepCopy(fooInput);
 
@@ -501,21 +520,23 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const bazInput = new Int8Array([32, 96]);
-		(bazInput as any)["foo"] = 64;
-		(bazInput as any)["bar"] = "poopoo peepee";
+		(bazInput as any).foo = 64;
+		(bazInput as any).bar = "poopoo peepee";
 
 		const bazCopy = deepCopy(bazInput);
 
 		assert.strictEqual(bazCopy.length, bazInput.length);
-		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
-		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
+		assert.strictEqual((bazCopy as any).foo, (bazInput as any).foo);
+		assert.strictEqual((bazCopy as any).bar, (bazInput as any).bar);
 		standardObjectAssert(bazCopy, bazInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
-	it("should work with Uint8Array objects", function() {
+	it("should work with Uint8Array objects", function () {
 		const fooInput = new Uint8Array([0, 63, 127, 255]);
 		const fooCopy = deepCopy(fooInput);
 
@@ -536,21 +557,23 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const bazInput = new Uint8Array([32, 96]);
-		(bazInput as any)["foo"] = 64;
-		(bazInput as any)["bar"] = "poopoo peepee";
+		(bazInput as any).foo = 64;
+		(bazInput as any).bar = "poopoo peepee";
 
 		const bazCopy = deepCopy(bazInput);
 
 		assert.strictEqual(bazCopy.length, bazInput.length);
-		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
-		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
+		assert.strictEqual((bazCopy as any).foo, (bazInput as any).foo);
+		assert.strictEqual((bazCopy as any).bar, (bazInput as any).bar);
 		standardObjectAssert(bazCopy, bazInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
-	it("should work with Uint8ClampedArray objects", function() {
+	it("should work with Uint8ClampedArray objects", function () {
 		const fooInput = new Uint8Array([0, 63, 127, 255]);
 		const fooCopy = deepCopy(fooInput);
 
@@ -571,22 +594,24 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const bazInput = new Uint8Array([32, 96]);
-		(bazInput as any)["foo"] = 64;
-		(bazInput as any)["bar"] = "poopoo peepee";
+		(bazInput as any).foo = 64;
+		(bazInput as any).bar = "poopoo peepee";
 
 		const bazCopy = deepCopy(bazInput);
 
 		assert.strictEqual(bazCopy.length, bazInput.length);
-		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
-		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
+		assert.strictEqual((bazCopy as any).foo, (bazInput as any).foo);
+		assert.strictEqual((bazCopy as any).bar, (bazInput as any).bar);
 		standardObjectAssert(bazCopy, bazInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
-	it("should work with Int16Array objects", function() {
+	it("should work with Int16Array objects", function () {
 		const fooInput = new Int16Array([-0x8000, -0x4000, 0, 0x3FFF, 0x7FFF]);
 		const fooCopy = deepCopy(fooInput);
 
@@ -607,21 +632,23 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const bazInput = new Int16Array([32, 96]);
-		(bazInput as any)["foo"] = 64;
-		(bazInput as any)["bar"] = "poopoo peepee";
+		(bazInput as any).foo = 64;
+		(bazInput as any).bar = "poopoo peepee";
 
 		const bazCopy = deepCopy(bazInput);
 
 		assert.strictEqual(bazCopy.length, bazInput.length);
-		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
-		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
+		assert.strictEqual((bazCopy as any).foo, (bazInput as any).foo);
+		assert.strictEqual((bazCopy as any).bar, (bazInput as any).bar);
 		standardObjectAssert(bazCopy, bazInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
-	it("should work with Uint16Array objects", function() {
+	it("should work with Uint16Array objects", function () {
 		const fooInput = new Uint16Array([0, 0x3FFF, 0x7FFF, 0xFFFF]);
 		const fooCopy = deepCopy(fooInput);
 
@@ -642,22 +669,24 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const bazInput = new Uint16Array([32, 96]);
-		(bazInput as any)["foo"] = 64;
-		(bazInput as any)["bar"] = "poopoo peepee";
+		(bazInput as any).foo = 64;
+		(bazInput as any).bar = "poopoo peepee";
 
 		const bazCopy = deepCopy(bazInput);
 
 		assert.strictEqual(bazCopy.length, bazInput.length);
-		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
-		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
+		assert.strictEqual((bazCopy as any).foo, (bazInput as any).foo);
+		assert.strictEqual((bazCopy as any).bar, (bazInput as any).bar);
 		standardObjectAssert(bazCopy, bazInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
-	it("should work with Int32Array objects", function() {
+	it("should work with Int32Array objects", function () {
 		const fooInput = new Int32Array([-0x80000000, -0x40000000, 0, 0x3FFFFFFF, 0x7FFFFFFF]);
 		const fooCopy = deepCopy(fooInput);
 
@@ -678,21 +707,23 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const bazInput = new Int32Array([32, 96]);
-		(bazInput as any)["foo"] = 64;
-		(bazInput as any)["bar"] = "poopoo peepee";
+		(bazInput as any).foo = 64;
+		(bazInput as any).bar = "poopoo peepee";
 
 		const bazCopy = deepCopy(bazInput);
 
 		assert.strictEqual(bazCopy.length, bazInput.length);
-		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
-		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
+		assert.strictEqual((bazCopy as any).foo, (bazInput as any).foo);
+		assert.strictEqual((bazCopy as any).bar, (bazInput as any).bar);
 		standardObjectAssert(bazCopy, bazInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
-	it("should work with Uint32Array objects", function() {
+	it("should work with Uint32Array objects", function () {
 		const fooInput = new Uint32Array([0, 0x3FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF]);
 		const fooCopy = deepCopy(fooInput);
 
@@ -713,18 +744,20 @@ describe("function deepCopy()", function() {
 
 
 		/* eslint-disable @typescript-eslint/no-explicit-any */
+		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 		const bazInput = new Uint32Array([32, 96]);
-		(bazInput as any)["foo"] = 64;
-		(bazInput as any)["bar"] = "poopoo peepee";
+		(bazInput as any).foo = 64;
+		(bazInput as any).bar = "poopoo peepee";
 
 		const bazCopy = deepCopy(bazInput);
 
 		assert.strictEqual(bazCopy.length, bazInput.length);
-		assert.strictEqual((bazCopy as any)["foo"], (bazInput as any)["foo"]);
-		assert.strictEqual((bazCopy as any)["bar"], (bazInput as any)["bar"]);
+		assert.strictEqual((bazCopy as any).foo, (bazInput as any).foo);
+		assert.strictEqual((bazCopy as any).bar, (bazInput as any).bar);
 		standardObjectAssert(bazCopy, bazInput);
 
+		/* eslint-enable @typescript-eslint/no-unsafe-member-access */
 		/* eslint-enable @typescript-eslint/no-explicit-any */
 	});
 
@@ -742,7 +775,7 @@ describe("function deepCopy()", function() {
 
 	//#region invalid objects
 
-	it("should throw TypeError when trying to copy WeakMap objects", function() {
+	it("should throw TypeError when trying to copy WeakMap objects", function () {
 		assert.throws(
 			() => {
 				const entries = [
@@ -780,7 +813,7 @@ describe("function deepCopy()", function() {
 		);
 	});
 
-	it("should throw TypeError when trying to copy WeakSet objects", function() {
+	it("should throw TypeError when trying to copy WeakSet objects", function () {
 		assert.throws(
 			() => {
 				const values = [
@@ -817,7 +850,7 @@ describe("function deepCopy()", function() {
 		);
 	});
 
-	it("should throw TypeError when trying to copy SharedArrayBuffer objects", function() {
+	it("should throw TypeError when trying to copy SharedArrayBuffer objects", function () {
 		assert.throws(
 			() => {
 				deepCopy(new SharedArrayBuffer(64));
@@ -837,7 +870,7 @@ describe("function deepCopy()", function() {
 		);
 	});
 
-	it("should throw TypeError when trying to copy DataView objects", function() {
+	it("should throw TypeError when trying to copy DataView objects", function () {
 		assert.throws(
 			() => {
 				deepCopy(new DataView(new ArrayBuffer(64)));
@@ -857,41 +890,45 @@ describe("function deepCopy()", function() {
 		);
 	});
 
-	it("should throw TypeError when trying to copy Promise objects", function() {
+	it("should throw TypeError when trying to copy Promise objects", function () {
 		assert.throws(
 			() => {
-				const promise = new Promise((resolve) => { resolve(undefined); });
-				deepCopy(promise);
+				const promise = new Promise((resolve) => {
+					resolve(undefined);
+				});
+				void deepCopy(promise);
 			},
 			isTypeError,
 		);
 
 		assert.throws(
 			() => {
-				const promise = new Promise((_resolve, reject) => { reject(); });
-				deepCopy(promise);
+				const promise = new Promise((_resolve, reject) => {
+					reject(new Error());
+				});
+				void deepCopy(promise);
 			},
 			isTypeError,
 		);
 
 		assert.throws(
 			() => {
-				deepCopy(Promise.resolve());
+				void deepCopy(Promise.resolve());
 			},
 			isTypeError,
 		);
 
 		assert.throws(
 			() => {
-				deepCopy(Promise.reject());
+				void deepCopy(Promise.reject(new Error()));
 			},
 			isTypeError,
 		);
 
 		assert.throws(
 			() => {
-				// eslint-disable-next-line no-empty-function
-				deepCopy(new Promise(() => {}));
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				void deepCopy(new Promise(() => { }));
 			},
 			isTypeError,
 		);

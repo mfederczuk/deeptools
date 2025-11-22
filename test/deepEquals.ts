@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -7,25 +7,25 @@ import assert from "assert";
 import { describe } from "mocha";
 import { deepEquals } from "../src";
 
-describe("function deepEquals()", function() {
+describe("function deepEquals()", function () {
 	//#region value w/out properties
 
-	it("should work with undefined", function() {
+	it("should work with undefined", function () {
 		assert(deepEquals(undefined, undefined));
 	});
 
-	it("should work with null", function() {
+	it("should work with null", function () {
 		assert(deepEquals(null, null));
 	});
 
-	it("should work with booleans", function() {
+	it("should work with booleans", function () {
 		assert(deepEquals(true, true));
 		assert(deepEquals(false, false));
 		assert(!(deepEquals(true, false)));
 		assert(!(deepEquals(false, true)));
 	});
 
-	it("should work with numbers", function() {
+	it("should work with numbers", function () {
 		assert(deepEquals(952985, 952985));
 		assert(deepEquals(-8888888888, -8888888888));
 		assert(!(deepEquals(258, 852)));
@@ -53,7 +53,7 @@ describe("function deepEquals()", function() {
 		assert(!(deepEquals(-1, NaN)));
 	});
 
-	it("should work with strings", function() {
+	it("should work with strings", function () {
 		assert(deepEquals("foobar", "foobar"));
 		assert(deepEquals("", ""));
 		assert(!(deepEquals("yee-fucking-haw", "yee haw")));
@@ -61,7 +61,7 @@ describe("function deepEquals()", function() {
 		assert(!(deepEquals("", "xyz")));
 	});
 
-	it("should work with bigints", function() {
+	it("should work with bigints", function () {
 		assert(deepEquals(BigInt("1489876542587139"), BigInt("1489876542587139")));
 		assert(deepEquals(BigInt("-1"), BigInt("-1")));
 		assert(!(deepEquals(BigInt("12321147"), BigInt("123421147"))));
@@ -70,7 +70,7 @@ describe("function deepEquals()", function() {
 		assert(!(deepEquals(BigInt("-125"), BigInt("1144225896"))));
 	});
 
-	it("should work with symbols", function() {
+	it("should work with symbols", function () {
 		const fooSymDesc = "foo";
 		const fooSym = Symbol(fooSymDesc);
 		assert(deepEquals(fooSym, fooSym));
@@ -142,19 +142,19 @@ describe("function deepEquals()", function() {
 	//#endregion
 
 	// TODO: remove
-	it("should work", function() {
+	it("should work", function () {
 		const foo = {
 			a: {
 				x: {
 					yee: 16,
-					haw: null
+					haw: null,
 				},
 				y: [
 					"123",
 					32,
-					true
+					true,
 				],
-				z: 64
+				z: 64,
 			},
 			b: [
 				[
@@ -162,27 +162,27 @@ describe("function deepEquals()", function() {
 					[],
 					0,
 					"",
-					false
+					false,
 				],
 				{
 					abc: 123,
-					xyz: "asd"
-				}
-			]
+					xyz: "asd",
+				},
+			],
 		};
 
 		const bar = {
 			a: {
 				x: {
 					yee: 16,
-					haw: null
+					haw: null,
 				},
 				y: [
 					"123",
 					32,
-					true
+					true,
 				],
-				z: 64
+				z: 64,
 			},
 			b: [
 				[
@@ -190,13 +190,13 @@ describe("function deepEquals()", function() {
 					[],
 					0,
 					"",
-					false
+					false,
 				],
 				{
 					abc: 123,
-					xyz: "asd"
-				}
-			]
+					xyz: "asd",
+				},
+			],
 		};
 
 		assert(deepEquals(foo, bar));
@@ -205,25 +205,29 @@ describe("function deepEquals()", function() {
 
 		assert(!deepEquals(foo, bar));
 
+		/* eslint-disable @typescript-eslint/naming-convention */
+
 		assert(!deepEquals({
 			0: "foo",
 			1: "bar",
-			2: "baz"
+			2: "baz",
 		}, [
 			"foo",
 			"bar",
-			"baz"
+			"baz",
 		]));
 
 		assert(!deepEquals({
 			0: "foo",
 			1: "bar",
 			2: "baz",
-			length: 3
+			length: 3,
 		}, [
 			"foo",
 			"bar",
-			"baz"
+			"baz",
 		]));
+
+		/* eslint-enable @typescript-eslint/naming-convention */
 	});
 });

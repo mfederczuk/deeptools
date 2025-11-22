@@ -17,7 +17,6 @@ the Creative Commons Zero v1.0 Universal. (as in this case a copyright notice wo
 Files in which a SPDX short-form identifier cannot be used or does not fit (for whatever reason) are listed here.
 All of these files are published into the public domain under Creative Commons Zero v1.0 Universal:
 
-        .eslintrc.json
         .github/issue_labels.json
         .github/pull_request_template.md
         .mocharc.json

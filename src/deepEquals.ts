@@ -1,19 +1,94 @@
 /*
- * Copyright (c) 2023 Michael Federczuk
+ * Copyright (c) 2025 Michael Federczuk
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive, NonPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
-import type { GenericKey } from "./types";
-import { canValueHaveProperties, getPropertyKeys } from "./_internal/utils";
 
-export type DeepEqualsOptions = {
+export interface DeepEqualsOptions {
 	/**
 	 * Ignores the order that the properties are defined.
 	 *
 	 * Default is `true`.
 	 */
 	ignoreOrder?: boolean;
+}
+
+const contentsEqual = (array1: unknown[], array2: unknown[], ignoreOrder: boolean): boolean => {
+	const length: number = array1.length;
+
+	if (length !== array2.length) {
+		return false;
+	}
+
+	if (ignoreOrder) {
+		for (let i = 0; i < length; ++i) {
+			if (!(array2.includes(array1[i]))) {
+				return false;
+			}
+		}
+	} else {
+		for (let i = 0; i < length; ++i) {
+			if (array1[i] !== array2[i]) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+};
+
+const deepEqualPropertyDescriptor = (descriptor1: PropertyDescriptor, descriptor2: PropertyDescriptor): boolean => {
+	if ((descriptor1.configurable !== descriptor2.configurable) ||
+		(descriptor1.enumerable !== descriptor2.enumerable) ||
+		(descriptor1.writable !== descriptor2.writable) ||
+		("value" in descriptor1) !== ("value" in descriptor2)) {
+
+		return false;
+	}
+
+	if (("value" in descriptor1) && ("value" in descriptor2)) {
+		if (!(deepEquals(descriptor1.value, descriptor2.value))) {
+			return false;
+		}
+	}
+
+	if ((descriptor1.get !== descriptor2.get) || (descriptor1.set !== descriptor2.set)) {
+		return false;
+	}
+
+	return true;
+};
+
+const deepEqualProperty = <T extends NonPrimitive>(obj1: T, obj2: T, propertyKey: keyof T): boolean => {
+	const obj1PropDescriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj1, propertyKey);
+	const obj2PropDescriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj2, propertyKey);
+
+	return deepEqualPropertyDescriptor(obj1PropDescriptor, obj2PropDescriptor);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+const deepEqualsInternal = <T1 extends NonPrimitive, T2 extends NonPrimitive>(
+	obj1: T1,
+	obj2: T2,
+	options: Readonly<DeepEqualsOptions> | undefined,
+): boolean => {
+	const obj1Keys: (keyof T1)[] = getPropertyKeys(obj1);
+	const obj2Keys: (keyof T2)[] = getPropertyKeys(obj2);
+
+	if (!(contentsEqual(obj1Keys, obj2Keys, options?.ignoreOrder ?? true))) {
+		return false;
+	}
+
+	if (Object.getPrototypeOf(obj1) !== Object.getPrototypeOf(obj2)) {
+		return false;
+	}
+
+	return obj1Keys
+		.every((key: keyof T1): boolean => {
+			return deepEqualProperty(obj1, obj2 as unknown as T1, key);
+		});
 };
 
 /**
@@ -30,7 +105,7 @@ export function deepEquals(
 	obj2: unknown,
 	options?: Readonly<DeepEqualsOptions>,
 ): boolean {
-	if (!(canValueHaveProperties(obj1)) || !(canValueHaveProperties(obj2))) {
+	if (!(isNotPrimitive(obj1)) || !(isNotPrimitive(obj2))) {
 		if (Number.isNaN(obj1) && Number.isNaN(obj2)) {
 			return true;
 		}
@@ -38,63 +113,6 @@ export function deepEquals(
 		return (obj1 === obj2);
 	}
 
-	const obj1Keys: GenericKey[] = getPropertyKeys(obj1);
-	const obj2Keys: GenericKey[] = getPropertyKeys(obj2);
-
-	if (obj1Keys.length !== obj2Keys.length) {
-		return false;
-	}
-
-	if (options?.ignoreOrder !== true) {
-		for (let i = 0; i < obj1Keys.length; ++i) {
-			if (obj1Keys[i] !== obj2Keys[i]) {
-				return false;
-			}
-		}
-	} else {
-		for (let i = 0; i < obj1Keys.length; ++i) {
-			if (!(obj2Keys.includes(obj1Keys[i]))) {
-				return false;
-			}
-		}
-	}
-
-	if (Object.getPrototypeOf(obj1) !== Object.getPrototypeOf(obj2)) {
-		return false;
-	}
-
-	for (const propKey of [...obj1Keys, ...obj2Keys]) {
-		const obj1PropDescriptor: PropertyDescriptor =
-			(Object.getOwnPropertyDescriptor(obj1, propKey) as PropertyDescriptor);
-
-		const obj2PropDescriptor: PropertyDescriptor =
-			(Object.getOwnPropertyDescriptor(obj2, propKey) as PropertyDescriptor);
-
-		if ((obj1PropDescriptor.configurable !== obj2PropDescriptor.configurable) ||
-			(obj1PropDescriptor.enumerable !== obj2PropDescriptor.enumerable) ||
-			(obj1PropDescriptor.writable !== obj2PropDescriptor.writable)) {
-
-			return false;
-		}
-
-		if (("value" in obj1PropDescriptor) !== ("value" in obj2PropDescriptor)) {
-			return false;
-		}
-
-		if (("value" in obj1PropDescriptor) && ("value" in obj2PropDescriptor)) {
-			if (!(deepEquals(obj1PropDescriptor.value, obj2PropDescriptor.value))) {
-				return false;
-			}
-		}
-
-		if ((obj1PropDescriptor.get !== obj2PropDescriptor.get) ||
-		    (obj1PropDescriptor.set !== obj2PropDescriptor.set)) {
-
-			return false;
-		}
-	}
-
-	return true;
+	return deepEqualsInternal(obj1, obj2, options);
 }
-
 deepFreeze(deepEquals);
