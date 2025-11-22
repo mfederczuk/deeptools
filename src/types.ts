@@ -2,4 +2,7 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-export type GenericKey = (string | number | symbol);
+/**
+ * @deprecated Replaced with built-in {@link PropertyKey}.
+ */
+export type GenericKey = PropertyKey;
