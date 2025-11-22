@@ -6,6 +6,57 @@
 import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
 
+const scalarArrayTypesWithout64BitInts = [
+	Int8Array,
+	Uint8Array,
+	Uint8ClampedArray,
+
+	Int16Array,
+	Uint16Array,
+
+	Int32Array,
+	Uint32Array,
+
+	Float32Array,
+	Float64Array,
+] as const;
+
+const uncopiableTypes = [
+	[WeakMap, "WeakMap"],
+	[WeakSet, "WeakSet"],
+	[SharedArrayBuffer, "SharedArrayBuffer"],
+	[DataView, "DataView"],
+	[Promise, "Promise"],
+] as const;
+
+const initCopyOfScalarArrays = (obj: NonNullable<object>): NonNullable<object> | null => {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	for (const ScalarArray of scalarArrayTypesWithout64BitInts) {
+		if (obj instanceof ScalarArray) {
+			// TypeScript rejects this if the 64-bit integer arrays are added.
+			return new ScalarArray(obj);
+		}
+	}
+
+	if (obj instanceof BigInt64Array) {
+		return new BigInt64Array(obj);
+	}
+
+	if (obj instanceof BigUint64Array) {
+		return new BigUint64Array(obj);
+	}
+
+	return null;
+};
+
+const throwIfIsUncopiableType = (obj: unknown): void | never => {
+	for (const [uncopiableType, typeName] of uncopiableTypes) {
+		if (obj instanceof uncopiableType) {
+			throw new TypeError(`${typeName} objects cannot be copied`);
+		}
+	}
+};
+
 const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 	// <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects>
 	// these objects all seem to have some special built-in property that cannot be copied over after creation, so we
@@ -37,25 +88,10 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 		return new Set(copiedValues);
 	}
 
-	//#region scalar arrays
-
-	if (obj instanceof Int8Array) return new Int8Array(obj);
-	if (obj instanceof Uint8Array) return new Uint8Array(obj);
-	if (obj instanceof Uint8ClampedArray) return new Uint8ClampedArray(obj);
-
-	if (obj instanceof Int16Array) return new Int16Array(obj);
-	if (obj instanceof Uint16Array) return new Uint16Array(obj);
-
-	if (obj instanceof Int32Array) return new Int32Array(obj);
-	if (obj instanceof Uint32Array) return new Uint32Array(obj);
-
-	if (obj instanceof Float32Array) return new Float32Array(obj);
-	if (obj instanceof Float64Array) return new Float64Array(obj);
-
-	if (obj instanceof BigInt64Array) return new BigInt64Array(obj);
-	if (obj instanceof BigUint64Array) return new BigUint64Array(obj);
-
-	//#endregion
+	const scalarArrayCopyOrNull: NonNullable<object> | null = initCopyOfScalarArrays(obj);
+	if (scalarArrayCopyOrNull !== null) {
+		return scalarArrayCopyOrNull;
+	}
 
 	if (obj instanceof ArrayBuffer) {
 		const newBuffer = new ArrayBuffer(obj.byteLength);
@@ -67,18 +103,7 @@ const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
 		return newBuffer;
 	}
 
-	//#region
-
-	if (obj instanceof WeakMap) throw new TypeError("WeakMap objects cannot be copied");
-	if (obj instanceof WeakSet) throw new TypeError("WeakSet objects cannot be copied");
-
-	if (obj instanceof SharedArrayBuffer) throw new TypeError("SharedArrayBuffer objects cannot be copied");
-
-	if (obj instanceof DataView) throw new TypeError("DataView objects cannot be copied");
-
-	if (obj instanceof Promise) throw new TypeError("Promise objects cannot be copied");
-
-	//#endregion
+	throwIfIsUncopiableType(obj);
 
 	return Object.create(obj);
 };
