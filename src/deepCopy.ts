@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { getPropertyKeys, isNotPrimitive } from "./_internal/utils";
+import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive } from "./_internal/utils";
 import { deepFreeze } from "./deepFreeze";
 
 const initCopy = (obj: NonNullable<object>): NonNullable<object> => {
@@ -102,8 +102,7 @@ export function deepCopy<T>(obj: T): T {
 	const copy: NonNullable<object> = initCopy(obj);
 
 	for (const propertyKey of getPropertyKeys(obj)) {
-		const propertyDescriptor: PropertyDescriptor =
-			(Object.getOwnPropertyDescriptor(obj, propertyKey) as PropertyDescriptor);
+		const propertyDescriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, propertyKey);
 
 		if ("value" in propertyDescriptor) {
 			propertyDescriptor.value = deepCopy(propertyDescriptor.value);

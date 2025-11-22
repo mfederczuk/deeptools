@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { getPropertyKeys, isNotPrimitive } from "./_internal/utils";
+import { getOwnPropertyDescriptor, getPropertyKeys, isNotPrimitive, NonPrimitive } from "./_internal/utils";
 
-const deepFreezeKeysOfObject = (obj: Record<PropertyKey, unknown>, keys: readonly PropertyKey[]) => {
+const deepFreezeKeysOfObject = <T extends NonPrimitive>(obj: T, keys: readonly (keyof T)[]) => {
 	for (const key of keys) {
-		const descriptor: PropertyDescriptor = (Object.getOwnPropertyDescriptor(obj, key) as PropertyDescriptor);
+		const descriptor: PropertyDescriptor = getOwnPropertyDescriptor(obj, key);
 
 		deepFreeze(descriptor.get);
 		deepFreeze(descriptor.set);
@@ -15,23 +15,20 @@ const deepFreezeKeysOfObject = (obj: Record<PropertyKey, unknown>, keys: readonl
 	}
 };
 
-const deepFreezePrototypeExcludingConstructor = (prototype: Record<PropertyKey, unknown>) => {
-	const keys: PropertyKey[] = getPropertyKeys(prototype)
-		.filter((key: PropertyKey) => (key !== "constructor"));
+const deepFreezePrototypeExcludingConstructor = <P extends NonPrimitive>(prototype: P) => {
+	const keys: (keyof P)[] = getPropertyKeys(prototype)
+		.filter((key: keyof P) => (key !== "constructor"));
 
 	deepFreezeKeysOfObject(prototype, keys);
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const deepFreezeFunctionWithPrototype = <F extends Function>(func: F): Readonly<F> => {
-	const keys: PropertyKey[] = getPropertyKeys(func)
-		.filter((key: PropertyKey) => (key !== "prototype"));
+	const keys: (keyof F)[] = getPropertyKeys(func)
+		.filter((key: keyof F) => (key !== "prototype"));
 
 	deepFreezePrototypeExcludingConstructor(func.prototype);
-
-	for (const key of keys) {
-		deepFreeze((func as Record<PropertyKey, unknown>)[key]);
-	}
+	deepFreezeKeysOfObject(func, keys);
 
 	return Object.freeze(func);
 };
@@ -82,10 +79,7 @@ function deepFreeze<T>(obj: T): Readonly<T> {
 		return deepFreezeFunctionWithPrototype(obj);
 	}
 
-	deepFreezeKeysOfObject(
-		(obj as Record<PropertyKey, unknown>),
-		getPropertyKeys(obj),
-	);
+	deepFreezeKeysOfObject(obj, getPropertyKeys(obj));
 
 	if ((obj instanceof Map) || (obj instanceof Set)) {
 		for (const [key, value] of obj.entries()) {
